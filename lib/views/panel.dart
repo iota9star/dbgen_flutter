@@ -166,23 +166,20 @@ Widget navRailLeading(BuildContext context) {
 
 @hwidget
 Widget contentPanel() {
-  return Column(
-    mainAxisSize: MainAxisSize.max,
-    crossAxisAlignment: CrossAxisAlignment.start,
+  return Stack(
     children: [
-      const SizedBox(
-        height: 6.0,
-      ),
-      const ControlButtonGroup(),
-      const SizedBox(
-        height: 6.0,
-      ),
-      const Expanded(
+      Positioned.fill(
         child: const SharedAxisTransitionPageSwitcher(
           const ContentPanelNavigator(),
           reverse: true,
         ),
       ),
+      Positioned(
+        top: 6.0,
+        right: 0,
+        left: 0,
+        child: const ControlButtonGroup(),
+      )
     ],
   );
 }
@@ -210,16 +207,17 @@ Widget controlButtonGroup(BuildContext context) {
             fontSize: 12.0,
           ),
           decoration: const BoxDecoration(
-              borderRadius: const BorderRadius.all(
-                const Radius.circular(4.0),
-              ),
-              color: Colors.white,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black26,
-                  blurRadius: 4.0,
-                )
-              ]),
+            borderRadius: const BorderRadius.all(
+              const Radius.circular(4.0),
+            ),
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black26,
+                blurRadius: 4.0,
+              )
+            ],
+          ),
           child: Container(
             decoration: BoxDecoration(
               color: controlButtonColors[i],
@@ -234,7 +232,7 @@ Widget controlButtonGroup(BuildContext context) {
             margin: const EdgeInsets.all(6.0),
             padding: const EdgeInsets.all(2.0),
             child: AnimatedOpacity(
-              duration: Duration(milliseconds: 100),
+              duration: const Duration(milliseconds: 100),
               opacity: index == i ? 1.0 : 0.0,
               child: Icon(
                 controlButtonIcons[i],

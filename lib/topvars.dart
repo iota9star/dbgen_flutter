@@ -42,7 +42,7 @@ class Routes {
   static const ABOUT = "$HOME/about";
 }
 
-final destinationItems = const [
+const destinationItems = const [
   const DestinationItem(
     "主页",
     Routes.DASHBOARD,
@@ -68,12 +68,12 @@ final controlButtonColors = [
   HexColor.fromHex("#3ec544"),
   HexColor.fromHex("#fa625c")
 ];
-final controlButtonIcons = const [
+const controlButtonIcons = const [
   FluentIcons.subtract_24_regular,
   FluentIcons.add_24_regular,
   FluentIcons.dismiss_24_regular
 ];
-final controlButtonTooltips = const ["最小化", "最大化", "关闭"];
+const controlButtonTooltips = const ["最小化", "最大化", "关闭"];
 final controlButtonActions = [
   () => appWindow.minimize(),
   () => appWindow.maximizeOrRestore(),
