@@ -162,6 +162,8 @@ final showSysDBProvider = StateProvider((ref) => false);
 
 final dbFilterProvider = StateNotifierProvider<DBFilterNotifier, Set<String>>(
     (ref) => DBFilterNotifier());
+final dbKeyProvider = ScopedProvider<String>(null);
+final dbSectionKeyProvider = ScopedProvider<String>(null);
 
 class DBFilterNotifier extends StateNotifier<Set<String>> {
   DBFilterNotifier() : super({});

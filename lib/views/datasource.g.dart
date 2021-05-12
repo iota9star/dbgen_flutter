@@ -64,6 +64,13 @@ class TableSections extends HookWidget {
   Widget build(BuildContext _context) => tableSections(_context);
 }
 
+class DbSection extends HookWidget {
+  const DbSection({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext _context) => dbSection(_context);
+}
+
 class TableItemProviderScope extends HookWidget {
   const TableItemProviderScope({Key? key}) : super(key: key);
 
@@ -117,7 +124,28 @@ class DbFilters extends HookWidget {
   const DbFilters({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext _context) => dbFilters(_context);
+  Widget build(BuildContext _context) => dbFilters();
+}
+
+class ShowSysSwitch extends HookWidget {
+  const ShowSysSwitch({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext _context) => showSysSwitch(_context);
+}
+
+class DbItems extends HookWidget {
+  const DbItems({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext _context) => dbItems(_context);
+}
+
+class DbItem extends HookWidget {
+  const DbItem({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext _context) => dbItem(_context);
 }
 
 class TableItem extends HookWidget {
