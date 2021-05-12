@@ -199,6 +199,7 @@ final navRailSelectedProvider =
     StateProvider<DestinationItem>((ref) => destinationItems.first);
 
 final windowButtonHoverIndexProvider = StateProvider<int>((ref) => -1);
+final windowButtonIndexProvider = ScopedProvider<int>(null);
 
 final connectionItemProvider = ScopedProvider<Connection?>((ref) => null);
 

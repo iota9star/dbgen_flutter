@@ -41,6 +41,13 @@ class ControlButtonGroup extends HookWidget {
   Widget build(BuildContext _context) => controlButtonGroup(_context);
 }
 
+class ControlButton extends HookWidget {
+  const ControlButton({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext _context) => controlButton(_context);
+}
+
 class ContentPanelNavigator extends StatelessWidget {
   const ContentPanelNavigator({Key? key}) : super(key: key);
 

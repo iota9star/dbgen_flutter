@@ -11,6 +11,7 @@ import 'package:isar/src/query_builder.dart';
 import 'package:ffi/ffi.dart';
 import 'package:path/path.dart' as p;
 import 'model/db.dart';
+import 'model/template.dart';
 import 'model/theme.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter/widgets.dart';
@@ -19,7 +20,7 @@ import 'package:dbgen/isars.dart';
 const _utf8Encoder = Utf8Encoder();
 
 final _schema =
-    '[{"name":"Connection","idProperty":"id","properties":[{"name":"id","type":3},{"name":"title","type":5},{"name":"desc","type":5},{"name":"host","type":5},{"name":"port","type":3},{"name":"user","type":5},{"name":"password","type":5},{"name":"useCompression","type":0},{"name":"useSSL","type":0},{"name":"maxPacketSize","type":3},{"name":"charset","type":3},{"name":"timeout","type":3},{"name":"createAt","type":3},{"name":"updateAt","type":3},{"name":"lastOpenAt","type":3},{"name":"color","type":3}],"indexes":[],"links":[]},{"name":"ITheme","idProperty":"id","properties":[{"name":"id","type":3},{"name":"activeAt","type":3},{"name":"canDelete","type":0},{"name":"autoMode","type":0},{"name":"isDark","type":0},{"name":"primaryColor","type":3},{"name":"accentColor","type":3},{"name":"lightBackgroundColor","type":3},{"name":"darkBackgroundColor","type":3},{"name":"lightScaffoldBackgroundColor","type":3},{"name":"darkScaffoldBackgroundColor","type":3}],"indexes":[],"links":[]}]';
+    '[{"name":"Connection","idProperty":"id","properties":[{"name":"id","type":3},{"name":"title","type":5},{"name":"desc","type":5},{"name":"host","type":5},{"name":"port","type":3},{"name":"user","type":5},{"name":"password","type":5},{"name":"useCompression","type":0},{"name":"useSSL","type":0},{"name":"maxPacketSize","type":3},{"name":"charset","type":3},{"name":"timeout","type":3},{"name":"createAt","type":3},{"name":"updateAt","type":3},{"name":"lastOpenAt","type":3},{"name":"color","type":3}],"indexes":[],"links":[]},{"name":"Template","idProperty":"id","properties":[{"name":"id","type":3},{"name":"title","type":5},{"name":"desc","type":5},{"name":"lang","type":5},{"name":"group","type":5},{"name":"content","type":5},{"name":"path","type":5},{"name":"map","type":5},{"name":"createAt","type":3},{"name":"updateAt","type":3}],"indexes":[],"links":[]},{"name":"Lang","idProperty":"id","properties":[{"name":"id","type":3},{"name":"lang","type":5},{"name":"desc","type":5},{"name":"map","type":5},{"name":"color","type":3}],"indexes":[],"links":[]},{"name":"ITheme","idProperty":"id","properties":[{"name":"id","type":3},{"name":"activeAt","type":3},{"name":"canDelete","type":0},{"name":"autoMode","type":0},{"name":"isDark","type":0},{"name":"primaryColor","type":3},{"name":"accentColor","type":3},{"name":"lightBackgroundColor","type":3},{"name":"darkBackgroundColor","type":3},{"name":"lightScaffoldBackgroundColor","type":3},{"name":"darkScaffoldBackgroundColor","type":3}],"indexes":[],"links":[]}]';
 
 Future<Isar> openIsar(
     {String name = 'isar',
@@ -71,6 +72,47 @@ Future<Isar> openIsar(
           setId: (obj, id) => obj.id = id,
         );
         nCall(IC.isar_get_collection(isar.ptr, collectionPtrPtr, 1));
+        IC.isar_get_property_offsets(
+            collectionPtrPtr.value, propertyOffsetsPtr);
+        collections['Template'] = IsarCollectionImpl<Template>(
+          isar: isar,
+          adapter: _TemplateAdapter(),
+          ptr: collectionPtrPtr.value,
+          propertyOffsets: propertyOffsets.sublist(0, 10),
+          propertyIds: {
+            'id': 0,
+            'title': 1,
+            'desc': 2,
+            'lang': 3,
+            'group': 4,
+            'content': 5,
+            'path': 6,
+            'map': 7,
+            'createAt': 8,
+            'updateAt': 9
+          },
+          indexIds: {},
+          linkIds: {},
+          backlinkIds: {},
+          getId: (obj) => obj.id,
+          setId: (obj, id) => obj.id = id,
+        );
+        nCall(IC.isar_get_collection(isar.ptr, collectionPtrPtr, 2));
+        IC.isar_get_property_offsets(
+            collectionPtrPtr.value, propertyOffsetsPtr);
+        collections['Lang'] = IsarCollectionImpl<Lang>(
+          isar: isar,
+          adapter: _LangAdapter(),
+          ptr: collectionPtrPtr.value,
+          propertyOffsets: propertyOffsets.sublist(0, 5),
+          propertyIds: {'id': 0, 'lang': 1, 'desc': 2, 'map': 3, 'color': 4},
+          indexIds: {},
+          linkIds: {},
+          backlinkIds: {},
+          getId: (obj) => obj.id,
+          setId: (obj, id) => obj.id = id,
+        );
+        nCall(IC.isar_get_collection(isar.ptr, collectionPtrPtr, 3));
         IC.isar_get_property_offsets(
             collectionPtrPtr.value, propertyOffsetsPtr);
         collections['ITheme'] = IsarCollectionImpl<ITheme>(
@@ -271,6 +313,212 @@ class _ConnectionAdapter extends TypeAdapter<Connection> {
   }
 }
 
+class _TemplateAdapter extends TypeAdapter<Template> {
+  static const _StringMapTypeConverter = StringMapTypeConverter();
+
+  @override
+  int serialize(IsarCollectionImpl<Template> collection, RawObject rawObj,
+      Template object, List<int> offsets,
+      [int? existingBufferSize]) {
+    var dynamicSize = 0;
+    final value0 = object.id;
+    final _id = value0;
+    final value1 = object.title;
+    final _title = _utf8Encoder.convert(value1);
+    dynamicSize += _title.length;
+    final value2 = object.desc;
+    Uint8List? _desc;
+    if (value2 != null) {
+      _desc = _utf8Encoder.convert(value2);
+    }
+    dynamicSize += _desc?.length ?? 0;
+    final value3 = object.lang;
+    final _lang = _utf8Encoder.convert(value3);
+    dynamicSize += _lang.length;
+    final value4 = object.group;
+    Uint8List? _group;
+    if (value4 != null) {
+      _group = _utf8Encoder.convert(value4);
+    }
+    dynamicSize += _group?.length ?? 0;
+    final value5 = object.content;
+    final _content = _utf8Encoder.convert(value5);
+    dynamicSize += _content.length;
+    final value6 = object.path;
+    final _path = _utf8Encoder.convert(value6);
+    dynamicSize += _path.length;
+    final value7 = _TemplateAdapter._StringMapTypeConverter.toIsar(object.map);
+    final _map = _utf8Encoder.convert(value7);
+    dynamicSize += _map.length;
+    final value8 = object.createAt;
+    final _createAt = value8;
+    final value9 = object.updateAt;
+    final _updateAt = value9;
+    final size = dynamicSize + 82;
+
+    late int bufferSize;
+    if (existingBufferSize != null) {
+      if (existingBufferSize < size) {
+        malloc.free(rawObj.buffer);
+        rawObj.buffer = malloc(size);
+        bufferSize = size;
+      } else {
+        bufferSize = existingBufferSize;
+      }
+    } else {
+      rawObj.buffer = malloc(size);
+      bufferSize = size;
+    }
+    rawObj.buffer_length = size;
+    final buffer = rawObj.buffer.asTypedList(size);
+    final writer = BinaryWriter(buffer, 82);
+    writer.writeLong(offsets[0], _id);
+    writer.writeBytes(offsets[1], _title);
+    writer.writeBytes(offsets[2], _desc);
+    writer.writeBytes(offsets[3], _lang);
+    writer.writeBytes(offsets[4], _group);
+    writer.writeBytes(offsets[5], _content);
+    writer.writeBytes(offsets[6], _path);
+    writer.writeBytes(offsets[7], _map);
+    writer.writeDateTime(offsets[8], _createAt);
+    writer.writeDateTime(offsets[9], _updateAt);
+    return bufferSize;
+  }
+
+  @override
+  Template deserialize(IsarCollectionImpl<Template> collection,
+      BinaryReader reader, List<int> offsets) {
+    final object = Template();
+    object.id = reader.readLongOrNull(offsets[0]);
+    object.title = reader.readString(offsets[1]);
+    object.desc = reader.readStringOrNull(offsets[2]);
+    object.lang = reader.readString(offsets[3]);
+    object.group = reader.readStringOrNull(offsets[4]);
+    object.content = reader.readString(offsets[5]);
+    object.path = reader.readString(offsets[6]);
+    object.map = _TemplateAdapter._StringMapTypeConverter.fromIsar(
+        reader.readString(offsets[7]));
+    object.createAt = reader.readDateTime(offsets[8]);
+    object.updateAt = reader.readDateTimeOrNull(offsets[9]);
+    return object;
+  }
+
+  @override
+  P deserializeProperty<P>(BinaryReader reader, int propertyIndex, int offset) {
+    switch (propertyIndex) {
+      case 0:
+        return (reader.readLongOrNull(offset)) as P;
+      case 1:
+        return (reader.readString(offset)) as P;
+      case 2:
+        return (reader.readStringOrNull(offset)) as P;
+      case 3:
+        return (reader.readString(offset)) as P;
+      case 4:
+        return (reader.readStringOrNull(offset)) as P;
+      case 5:
+        return (reader.readString(offset)) as P;
+      case 6:
+        return (reader.readString(offset)) as P;
+      case 7:
+        return (_TemplateAdapter._StringMapTypeConverter.fromIsar(
+            reader.readString(offset))) as P;
+      case 8:
+        return (reader.readDateTime(offset)) as P;
+      case 9:
+        return (reader.readDateTimeOrNull(offset)) as P;
+      default:
+        throw 'Illegal propertyIndex';
+    }
+  }
+}
+
+class _LangAdapter extends TypeAdapter<Lang> {
+  static const _StringMapTypeConverter = StringMapTypeConverter();
+  static const _ColorTypeConverter = ColorTypeConverter();
+
+  @override
+  int serialize(IsarCollectionImpl<Lang> collection, RawObject rawObj,
+      Lang object, List<int> offsets,
+      [int? existingBufferSize]) {
+    var dynamicSize = 0;
+    final value0 = object.id;
+    final _id = value0;
+    final value1 = object.lang;
+    final _lang = _utf8Encoder.convert(value1);
+    dynamicSize += _lang.length;
+    final value2 = object.desc;
+    Uint8List? _desc;
+    if (value2 != null) {
+      _desc = _utf8Encoder.convert(value2);
+    }
+    dynamicSize += _desc?.length ?? 0;
+    final value3 = _LangAdapter._StringMapTypeConverter.toIsar(object.map);
+    final _map = _utf8Encoder.convert(value3);
+    dynamicSize += _map.length;
+    final value4 = _LangAdapter._ColorTypeConverter.toIsar(object.color);
+    final _color = value4;
+    final size = dynamicSize + 42;
+
+    late int bufferSize;
+    if (existingBufferSize != null) {
+      if (existingBufferSize < size) {
+        malloc.free(rawObj.buffer);
+        rawObj.buffer = malloc(size);
+        bufferSize = size;
+      } else {
+        bufferSize = existingBufferSize;
+      }
+    } else {
+      rawObj.buffer = malloc(size);
+      bufferSize = size;
+    }
+    rawObj.buffer_length = size;
+    final buffer = rawObj.buffer.asTypedList(size);
+    final writer = BinaryWriter(buffer, 42);
+    writer.writeLong(offsets[0], _id);
+    writer.writeBytes(offsets[1], _lang);
+    writer.writeBytes(offsets[2], _desc);
+    writer.writeBytes(offsets[3], _map);
+    writer.writeLong(offsets[4], _color);
+    return bufferSize;
+  }
+
+  @override
+  Lang deserialize(IsarCollectionImpl<Lang> collection, BinaryReader reader,
+      List<int> offsets) {
+    final object = Lang();
+    object.id = reader.readLongOrNull(offsets[0]);
+    object.lang = reader.readString(offsets[1]);
+    object.desc = reader.readStringOrNull(offsets[2]);
+    object.map = _LangAdapter._StringMapTypeConverter.fromIsar(
+        reader.readString(offsets[3]));
+    object.color =
+        _LangAdapter._ColorTypeConverter.fromIsar(reader.readLong(offsets[4]));
+    return object;
+  }
+
+  @override
+  P deserializeProperty<P>(BinaryReader reader, int propertyIndex, int offset) {
+    switch (propertyIndex) {
+      case 0:
+        return (reader.readLongOrNull(offset)) as P;
+      case 1:
+        return (reader.readString(offset)) as P;
+      case 2:
+        return (reader.readStringOrNull(offset)) as P;
+      case 3:
+        return (_LangAdapter._StringMapTypeConverter.fromIsar(
+            reader.readString(offset))) as P;
+      case 4:
+        return (_LangAdapter._ColorTypeConverter.fromIsar(
+            reader.readLong(offset))) as P;
+      default:
+        throw 'Illegal propertyIndex';
+    }
+  }
+}
+
 class _IThemeAdapter extends TypeAdapter<ITheme> {
   static const _ColorTypeConverter = ColorTypeConverter();
 
@@ -407,6 +655,14 @@ extension GetCollection on Isar {
     return getCollection('Connection');
   }
 
+  IsarCollection<Template> get templates {
+    return getCollection('Template');
+  }
+
+  IsarCollection<Lang> get langs {
+    return getCollection('Lang');
+  }
+
   IsarCollection<ITheme> get iThemes {
     return getCollection('ITheme');
   }
@@ -419,6 +675,22 @@ extension ConnectionQueryWhereSort on QueryBuilder<Connection, QWhere> {
 }
 
 extension ConnectionQueryWhere on QueryBuilder<Connection, QWhereClause> {}
+
+extension TemplateQueryWhereSort on QueryBuilder<Template, QWhere> {
+  QueryBuilder<Template, QAfterWhere> anyId() {
+    return addWhereClause(WhereClause(indexName: 'id'));
+  }
+}
+
+extension TemplateQueryWhere on QueryBuilder<Template, QWhereClause> {}
+
+extension LangQueryWhereSort on QueryBuilder<Lang, QWhere> {
+  QueryBuilder<Lang, QAfterWhere> anyId() {
+    return addWhereClause(WhereClause(indexName: 'id'));
+  }
+}
+
+extension LangQueryWhere on QueryBuilder<Lang, QWhereClause> {}
 
 extension IThemeQueryWhereSort on QueryBuilder<ITheme, QWhere> {
   QueryBuilder<ITheme, QAfterWhere> anyId() {
@@ -1109,6 +1381,778 @@ extension ConnectionQueryFilter on QueryBuilder<Connection, QFilterCondition> {
   }
 }
 
+extension TemplateQueryFilter on QueryBuilder<Template, QFilterCondition> {
+  QueryBuilder<Template, QAfterFilterCondition> idIsNull() {
+    return addFilterCondition(FilterCondition(
+      type: ConditionType.Eq,
+      property: 'id',
+      value: null,
+    ));
+  }
+
+  QueryBuilder<Template, QAfterFilterCondition> idEqualTo(int? value) {
+    return addFilterCondition(FilterCondition(
+      type: ConditionType.Eq,
+      property: 'id',
+      value: value,
+    ));
+  }
+
+  QueryBuilder<Template, QAfterFilterCondition> idGreaterThan(int? value) {
+    return addFilterCondition(FilterCondition(
+      type: ConditionType.Gt,
+      property: 'id',
+      value: value,
+    ));
+  }
+
+  QueryBuilder<Template, QAfterFilterCondition> idLessThan(int? value) {
+    return addFilterCondition(FilterCondition(
+      type: ConditionType.Lt,
+      property: 'id',
+      value: value,
+    ));
+  }
+
+  QueryBuilder<Template, QAfterFilterCondition> idBetween(
+      int? lower, int? upper) {
+    return addFilterCondition(FilterCondition.between(
+      property: 'id',
+      lower: lower,
+      upper: upper,
+    ));
+  }
+
+  QueryBuilder<Template, QAfterFilterCondition> titleEqualTo(String value,
+      {bool caseSensitive = true}) {
+    return addFilterCondition(FilterCondition(
+      type: ConditionType.Eq,
+      property: 'title',
+      value: value,
+      caseSensitive: caseSensitive,
+    ));
+  }
+
+  QueryBuilder<Template, QAfterFilterCondition> titleStartsWith(String value,
+      {bool caseSensitive = true}) {
+    final convertedValue = value;
+    return addFilterCondition(FilterCondition(
+      type: ConditionType.StartsWith,
+      property: 'title',
+      value: convertedValue,
+      caseSensitive: caseSensitive,
+    ));
+  }
+
+  QueryBuilder<Template, QAfterFilterCondition> titleEndsWith(String value,
+      {bool caseSensitive = true}) {
+    final convertedValue = value;
+    return addFilterCondition(FilterCondition(
+      type: ConditionType.EndsWith,
+      property: 'title',
+      value: convertedValue,
+      caseSensitive: caseSensitive,
+    ));
+  }
+
+  QueryBuilder<Template, QAfterFilterCondition> titleContains(String value,
+      {bool caseSensitive = true}) {
+    final convertedValue = value;
+    return addFilterCondition(FilterCondition(
+      type: ConditionType.Matches,
+      property: 'title',
+      value: '*$convertedValue*',
+      caseSensitive: caseSensitive,
+    ));
+  }
+
+  QueryBuilder<Template, QAfterFilterCondition> titleMatches(String pattern,
+      {bool caseSensitive = true}) {
+    return addFilterCondition(FilterCondition(
+      type: ConditionType.Matches,
+      property: 'title',
+      value: pattern,
+      caseSensitive: caseSensitive,
+    ));
+  }
+
+  QueryBuilder<Template, QAfterFilterCondition> descIsNull() {
+    return addFilterCondition(FilterCondition(
+      type: ConditionType.Eq,
+      property: 'desc',
+      value: null,
+    ));
+  }
+
+  QueryBuilder<Template, QAfterFilterCondition> descEqualTo(String? value,
+      {bool caseSensitive = true}) {
+    return addFilterCondition(FilterCondition(
+      type: ConditionType.Eq,
+      property: 'desc',
+      value: value,
+      caseSensitive: caseSensitive,
+    ));
+  }
+
+  QueryBuilder<Template, QAfterFilterCondition> descStartsWith(String? value,
+      {bool caseSensitive = true}) {
+    final convertedValue = value;
+    assert(convertedValue != null, 'Null values are not allowed');
+    return addFilterCondition(FilterCondition(
+      type: ConditionType.StartsWith,
+      property: 'desc',
+      value: convertedValue,
+      caseSensitive: caseSensitive,
+    ));
+  }
+
+  QueryBuilder<Template, QAfterFilterCondition> descEndsWith(String? value,
+      {bool caseSensitive = true}) {
+    final convertedValue = value;
+    assert(convertedValue != null, 'Null values are not allowed');
+    return addFilterCondition(FilterCondition(
+      type: ConditionType.EndsWith,
+      property: 'desc',
+      value: convertedValue,
+      caseSensitive: caseSensitive,
+    ));
+  }
+
+  QueryBuilder<Template, QAfterFilterCondition> descContains(String? value,
+      {bool caseSensitive = true}) {
+    final convertedValue = value;
+    assert(convertedValue != null, 'Null values are not allowed');
+    return addFilterCondition(FilterCondition(
+      type: ConditionType.Matches,
+      property: 'desc',
+      value: '*$convertedValue*',
+      caseSensitive: caseSensitive,
+    ));
+  }
+
+  QueryBuilder<Template, QAfterFilterCondition> descMatches(String pattern,
+      {bool caseSensitive = true}) {
+    return addFilterCondition(FilterCondition(
+      type: ConditionType.Matches,
+      property: 'desc',
+      value: pattern,
+      caseSensitive: caseSensitive,
+    ));
+  }
+
+  QueryBuilder<Template, QAfterFilterCondition> langEqualTo(String value,
+      {bool caseSensitive = true}) {
+    return addFilterCondition(FilterCondition(
+      type: ConditionType.Eq,
+      property: 'lang',
+      value: value,
+      caseSensitive: caseSensitive,
+    ));
+  }
+
+  QueryBuilder<Template, QAfterFilterCondition> langStartsWith(String value,
+      {bool caseSensitive = true}) {
+    final convertedValue = value;
+    return addFilterCondition(FilterCondition(
+      type: ConditionType.StartsWith,
+      property: 'lang',
+      value: convertedValue,
+      caseSensitive: caseSensitive,
+    ));
+  }
+
+  QueryBuilder<Template, QAfterFilterCondition> langEndsWith(String value,
+      {bool caseSensitive = true}) {
+    final convertedValue = value;
+    return addFilterCondition(FilterCondition(
+      type: ConditionType.EndsWith,
+      property: 'lang',
+      value: convertedValue,
+      caseSensitive: caseSensitive,
+    ));
+  }
+
+  QueryBuilder<Template, QAfterFilterCondition> langContains(String value,
+      {bool caseSensitive = true}) {
+    final convertedValue = value;
+    return addFilterCondition(FilterCondition(
+      type: ConditionType.Matches,
+      property: 'lang',
+      value: '*$convertedValue*',
+      caseSensitive: caseSensitive,
+    ));
+  }
+
+  QueryBuilder<Template, QAfterFilterCondition> langMatches(String pattern,
+      {bool caseSensitive = true}) {
+    return addFilterCondition(FilterCondition(
+      type: ConditionType.Matches,
+      property: 'lang',
+      value: pattern,
+      caseSensitive: caseSensitive,
+    ));
+  }
+
+  QueryBuilder<Template, QAfterFilterCondition> groupIsNull() {
+    return addFilterCondition(FilterCondition(
+      type: ConditionType.Eq,
+      property: 'group',
+      value: null,
+    ));
+  }
+
+  QueryBuilder<Template, QAfterFilterCondition> groupEqualTo(String? value,
+      {bool caseSensitive = true}) {
+    return addFilterCondition(FilterCondition(
+      type: ConditionType.Eq,
+      property: 'group',
+      value: value,
+      caseSensitive: caseSensitive,
+    ));
+  }
+
+  QueryBuilder<Template, QAfterFilterCondition> groupStartsWith(String? value,
+      {bool caseSensitive = true}) {
+    final convertedValue = value;
+    assert(convertedValue != null, 'Null values are not allowed');
+    return addFilterCondition(FilterCondition(
+      type: ConditionType.StartsWith,
+      property: 'group',
+      value: convertedValue,
+      caseSensitive: caseSensitive,
+    ));
+  }
+
+  QueryBuilder<Template, QAfterFilterCondition> groupEndsWith(String? value,
+      {bool caseSensitive = true}) {
+    final convertedValue = value;
+    assert(convertedValue != null, 'Null values are not allowed');
+    return addFilterCondition(FilterCondition(
+      type: ConditionType.EndsWith,
+      property: 'group',
+      value: convertedValue,
+      caseSensitive: caseSensitive,
+    ));
+  }
+
+  QueryBuilder<Template, QAfterFilterCondition> groupContains(String? value,
+      {bool caseSensitive = true}) {
+    final convertedValue = value;
+    assert(convertedValue != null, 'Null values are not allowed');
+    return addFilterCondition(FilterCondition(
+      type: ConditionType.Matches,
+      property: 'group',
+      value: '*$convertedValue*',
+      caseSensitive: caseSensitive,
+    ));
+  }
+
+  QueryBuilder<Template, QAfterFilterCondition> groupMatches(String pattern,
+      {bool caseSensitive = true}) {
+    return addFilterCondition(FilterCondition(
+      type: ConditionType.Matches,
+      property: 'group',
+      value: pattern,
+      caseSensitive: caseSensitive,
+    ));
+  }
+
+  QueryBuilder<Template, QAfterFilterCondition> contentEqualTo(String value,
+      {bool caseSensitive = true}) {
+    return addFilterCondition(FilterCondition(
+      type: ConditionType.Eq,
+      property: 'content',
+      value: value,
+      caseSensitive: caseSensitive,
+    ));
+  }
+
+  QueryBuilder<Template, QAfterFilterCondition> contentStartsWith(String value,
+      {bool caseSensitive = true}) {
+    final convertedValue = value;
+    return addFilterCondition(FilterCondition(
+      type: ConditionType.StartsWith,
+      property: 'content',
+      value: convertedValue,
+      caseSensitive: caseSensitive,
+    ));
+  }
+
+  QueryBuilder<Template, QAfterFilterCondition> contentEndsWith(String value,
+      {bool caseSensitive = true}) {
+    final convertedValue = value;
+    return addFilterCondition(FilterCondition(
+      type: ConditionType.EndsWith,
+      property: 'content',
+      value: convertedValue,
+      caseSensitive: caseSensitive,
+    ));
+  }
+
+  QueryBuilder<Template, QAfterFilterCondition> contentContains(String value,
+      {bool caseSensitive = true}) {
+    final convertedValue = value;
+    return addFilterCondition(FilterCondition(
+      type: ConditionType.Matches,
+      property: 'content',
+      value: '*$convertedValue*',
+      caseSensitive: caseSensitive,
+    ));
+  }
+
+  QueryBuilder<Template, QAfterFilterCondition> contentMatches(String pattern,
+      {bool caseSensitive = true}) {
+    return addFilterCondition(FilterCondition(
+      type: ConditionType.Matches,
+      property: 'content',
+      value: pattern,
+      caseSensitive: caseSensitive,
+    ));
+  }
+
+  QueryBuilder<Template, QAfterFilterCondition> pathEqualTo(String value,
+      {bool caseSensitive = true}) {
+    return addFilterCondition(FilterCondition(
+      type: ConditionType.Eq,
+      property: 'path',
+      value: value,
+      caseSensitive: caseSensitive,
+    ));
+  }
+
+  QueryBuilder<Template, QAfterFilterCondition> pathStartsWith(String value,
+      {bool caseSensitive = true}) {
+    final convertedValue = value;
+    return addFilterCondition(FilterCondition(
+      type: ConditionType.StartsWith,
+      property: 'path',
+      value: convertedValue,
+      caseSensitive: caseSensitive,
+    ));
+  }
+
+  QueryBuilder<Template, QAfterFilterCondition> pathEndsWith(String value,
+      {bool caseSensitive = true}) {
+    final convertedValue = value;
+    return addFilterCondition(FilterCondition(
+      type: ConditionType.EndsWith,
+      property: 'path',
+      value: convertedValue,
+      caseSensitive: caseSensitive,
+    ));
+  }
+
+  QueryBuilder<Template, QAfterFilterCondition> pathContains(String value,
+      {bool caseSensitive = true}) {
+    final convertedValue = value;
+    return addFilterCondition(FilterCondition(
+      type: ConditionType.Matches,
+      property: 'path',
+      value: '*$convertedValue*',
+      caseSensitive: caseSensitive,
+    ));
+  }
+
+  QueryBuilder<Template, QAfterFilterCondition> pathMatches(String pattern,
+      {bool caseSensitive = true}) {
+    return addFilterCondition(FilterCondition(
+      type: ConditionType.Matches,
+      property: 'path',
+      value: pattern,
+      caseSensitive: caseSensitive,
+    ));
+  }
+
+  QueryBuilder<Template, QAfterFilterCondition> mapEqualTo(
+      Map<String, String> value,
+      {bool caseSensitive = true}) {
+    return addFilterCondition(FilterCondition(
+      type: ConditionType.Eq,
+      property: 'map',
+      value: _TemplateAdapter._StringMapTypeConverter.toIsar(value),
+      caseSensitive: caseSensitive,
+    ));
+  }
+
+  QueryBuilder<Template, QAfterFilterCondition> mapStartsWith(
+      Map<String, String> value,
+      {bool caseSensitive = true}) {
+    final convertedValue =
+        _TemplateAdapter._StringMapTypeConverter.toIsar(value);
+    return addFilterCondition(FilterCondition(
+      type: ConditionType.StartsWith,
+      property: 'map',
+      value: convertedValue,
+      caseSensitive: caseSensitive,
+    ));
+  }
+
+  QueryBuilder<Template, QAfterFilterCondition> mapEndsWith(
+      Map<String, String> value,
+      {bool caseSensitive = true}) {
+    final convertedValue =
+        _TemplateAdapter._StringMapTypeConverter.toIsar(value);
+    return addFilterCondition(FilterCondition(
+      type: ConditionType.EndsWith,
+      property: 'map',
+      value: convertedValue,
+      caseSensitive: caseSensitive,
+    ));
+  }
+
+  QueryBuilder<Template, QAfterFilterCondition> mapContains(
+      Map<String, String> value,
+      {bool caseSensitive = true}) {
+    final convertedValue =
+        _TemplateAdapter._StringMapTypeConverter.toIsar(value);
+    return addFilterCondition(FilterCondition(
+      type: ConditionType.Matches,
+      property: 'map',
+      value: '*$convertedValue*',
+      caseSensitive: caseSensitive,
+    ));
+  }
+
+  QueryBuilder<Template, QAfterFilterCondition> mapMatches(String pattern,
+      {bool caseSensitive = true}) {
+    return addFilterCondition(FilterCondition(
+      type: ConditionType.Matches,
+      property: 'map',
+      value: pattern,
+      caseSensitive: caseSensitive,
+    ));
+  }
+
+  QueryBuilder<Template, QAfterFilterCondition> createAtEqualTo(
+      DateTime value) {
+    return addFilterCondition(FilterCondition(
+      type: ConditionType.Eq,
+      property: 'createAt',
+      value: value,
+    ));
+  }
+
+  QueryBuilder<Template, QAfterFilterCondition> createAtGreaterThan(
+      DateTime value) {
+    return addFilterCondition(FilterCondition(
+      type: ConditionType.Gt,
+      property: 'createAt',
+      value: value,
+    ));
+  }
+
+  QueryBuilder<Template, QAfterFilterCondition> createAtLessThan(
+      DateTime value) {
+    return addFilterCondition(FilterCondition(
+      type: ConditionType.Lt,
+      property: 'createAt',
+      value: value,
+    ));
+  }
+
+  QueryBuilder<Template, QAfterFilterCondition> createAtBetween(
+      DateTime lower, DateTime upper) {
+    return addFilterCondition(FilterCondition.between(
+      property: 'createAt',
+      lower: lower,
+      upper: upper,
+    ));
+  }
+
+  QueryBuilder<Template, QAfterFilterCondition> updateAtIsNull() {
+    return addFilterCondition(FilterCondition(
+      type: ConditionType.Eq,
+      property: 'updateAt',
+      value: null,
+    ));
+  }
+
+  QueryBuilder<Template, QAfterFilterCondition> updateAtEqualTo(
+      DateTime? value) {
+    return addFilterCondition(FilterCondition(
+      type: ConditionType.Eq,
+      property: 'updateAt',
+      value: value,
+    ));
+  }
+
+  QueryBuilder<Template, QAfterFilterCondition> updateAtGreaterThan(
+      DateTime? value) {
+    return addFilterCondition(FilterCondition(
+      type: ConditionType.Gt,
+      property: 'updateAt',
+      value: value,
+    ));
+  }
+
+  QueryBuilder<Template, QAfterFilterCondition> updateAtLessThan(
+      DateTime? value) {
+    return addFilterCondition(FilterCondition(
+      type: ConditionType.Lt,
+      property: 'updateAt',
+      value: value,
+    ));
+  }
+
+  QueryBuilder<Template, QAfterFilterCondition> updateAtBetween(
+      DateTime? lower, DateTime? upper) {
+    return addFilterCondition(FilterCondition.between(
+      property: 'updateAt',
+      lower: lower,
+      upper: upper,
+    ));
+  }
+}
+
+extension LangQueryFilter on QueryBuilder<Lang, QFilterCondition> {
+  QueryBuilder<Lang, QAfterFilterCondition> idIsNull() {
+    return addFilterCondition(FilterCondition(
+      type: ConditionType.Eq,
+      property: 'id',
+      value: null,
+    ));
+  }
+
+  QueryBuilder<Lang, QAfterFilterCondition> idEqualTo(int? value) {
+    return addFilterCondition(FilterCondition(
+      type: ConditionType.Eq,
+      property: 'id',
+      value: value,
+    ));
+  }
+
+  QueryBuilder<Lang, QAfterFilterCondition> idGreaterThan(int? value) {
+    return addFilterCondition(FilterCondition(
+      type: ConditionType.Gt,
+      property: 'id',
+      value: value,
+    ));
+  }
+
+  QueryBuilder<Lang, QAfterFilterCondition> idLessThan(int? value) {
+    return addFilterCondition(FilterCondition(
+      type: ConditionType.Lt,
+      property: 'id',
+      value: value,
+    ));
+  }
+
+  QueryBuilder<Lang, QAfterFilterCondition> idBetween(int? lower, int? upper) {
+    return addFilterCondition(FilterCondition.between(
+      property: 'id',
+      lower: lower,
+      upper: upper,
+    ));
+  }
+
+  QueryBuilder<Lang, QAfterFilterCondition> langEqualTo(String value,
+      {bool caseSensitive = true}) {
+    return addFilterCondition(FilterCondition(
+      type: ConditionType.Eq,
+      property: 'lang',
+      value: value,
+      caseSensitive: caseSensitive,
+    ));
+  }
+
+  QueryBuilder<Lang, QAfterFilterCondition> langStartsWith(String value,
+      {bool caseSensitive = true}) {
+    final convertedValue = value;
+    return addFilterCondition(FilterCondition(
+      type: ConditionType.StartsWith,
+      property: 'lang',
+      value: convertedValue,
+      caseSensitive: caseSensitive,
+    ));
+  }
+
+  QueryBuilder<Lang, QAfterFilterCondition> langEndsWith(String value,
+      {bool caseSensitive = true}) {
+    final convertedValue = value;
+    return addFilterCondition(FilterCondition(
+      type: ConditionType.EndsWith,
+      property: 'lang',
+      value: convertedValue,
+      caseSensitive: caseSensitive,
+    ));
+  }
+
+  QueryBuilder<Lang, QAfterFilterCondition> langContains(String value,
+      {bool caseSensitive = true}) {
+    final convertedValue = value;
+    return addFilterCondition(FilterCondition(
+      type: ConditionType.Matches,
+      property: 'lang',
+      value: '*$convertedValue*',
+      caseSensitive: caseSensitive,
+    ));
+  }
+
+  QueryBuilder<Lang, QAfterFilterCondition> langMatches(String pattern,
+      {bool caseSensitive = true}) {
+    return addFilterCondition(FilterCondition(
+      type: ConditionType.Matches,
+      property: 'lang',
+      value: pattern,
+      caseSensitive: caseSensitive,
+    ));
+  }
+
+  QueryBuilder<Lang, QAfterFilterCondition> descIsNull() {
+    return addFilterCondition(FilterCondition(
+      type: ConditionType.Eq,
+      property: 'desc',
+      value: null,
+    ));
+  }
+
+  QueryBuilder<Lang, QAfterFilterCondition> descEqualTo(String? value,
+      {bool caseSensitive = true}) {
+    return addFilterCondition(FilterCondition(
+      type: ConditionType.Eq,
+      property: 'desc',
+      value: value,
+      caseSensitive: caseSensitive,
+    ));
+  }
+
+  QueryBuilder<Lang, QAfterFilterCondition> descStartsWith(String? value,
+      {bool caseSensitive = true}) {
+    final convertedValue = value;
+    assert(convertedValue != null, 'Null values are not allowed');
+    return addFilterCondition(FilterCondition(
+      type: ConditionType.StartsWith,
+      property: 'desc',
+      value: convertedValue,
+      caseSensitive: caseSensitive,
+    ));
+  }
+
+  QueryBuilder<Lang, QAfterFilterCondition> descEndsWith(String? value,
+      {bool caseSensitive = true}) {
+    final convertedValue = value;
+    assert(convertedValue != null, 'Null values are not allowed');
+    return addFilterCondition(FilterCondition(
+      type: ConditionType.EndsWith,
+      property: 'desc',
+      value: convertedValue,
+      caseSensitive: caseSensitive,
+    ));
+  }
+
+  QueryBuilder<Lang, QAfterFilterCondition> descContains(String? value,
+      {bool caseSensitive = true}) {
+    final convertedValue = value;
+    assert(convertedValue != null, 'Null values are not allowed');
+    return addFilterCondition(FilterCondition(
+      type: ConditionType.Matches,
+      property: 'desc',
+      value: '*$convertedValue*',
+      caseSensitive: caseSensitive,
+    ));
+  }
+
+  QueryBuilder<Lang, QAfterFilterCondition> descMatches(String pattern,
+      {bool caseSensitive = true}) {
+    return addFilterCondition(FilterCondition(
+      type: ConditionType.Matches,
+      property: 'desc',
+      value: pattern,
+      caseSensitive: caseSensitive,
+    ));
+  }
+
+  QueryBuilder<Lang, QAfterFilterCondition> mapEqualTo(
+      Map<String, String> value,
+      {bool caseSensitive = true}) {
+    return addFilterCondition(FilterCondition(
+      type: ConditionType.Eq,
+      property: 'map',
+      value: _LangAdapter._StringMapTypeConverter.toIsar(value),
+      caseSensitive: caseSensitive,
+    ));
+  }
+
+  QueryBuilder<Lang, QAfterFilterCondition> mapStartsWith(
+      Map<String, String> value,
+      {bool caseSensitive = true}) {
+    final convertedValue = _LangAdapter._StringMapTypeConverter.toIsar(value);
+    return addFilterCondition(FilterCondition(
+      type: ConditionType.StartsWith,
+      property: 'map',
+      value: convertedValue,
+      caseSensitive: caseSensitive,
+    ));
+  }
+
+  QueryBuilder<Lang, QAfterFilterCondition> mapEndsWith(
+      Map<String, String> value,
+      {bool caseSensitive = true}) {
+    final convertedValue = _LangAdapter._StringMapTypeConverter.toIsar(value);
+    return addFilterCondition(FilterCondition(
+      type: ConditionType.EndsWith,
+      property: 'map',
+      value: convertedValue,
+      caseSensitive: caseSensitive,
+    ));
+  }
+
+  QueryBuilder<Lang, QAfterFilterCondition> mapContains(
+      Map<String, String> value,
+      {bool caseSensitive = true}) {
+    final convertedValue = _LangAdapter._StringMapTypeConverter.toIsar(value);
+    return addFilterCondition(FilterCondition(
+      type: ConditionType.Matches,
+      property: 'map',
+      value: '*$convertedValue*',
+      caseSensitive: caseSensitive,
+    ));
+  }
+
+  QueryBuilder<Lang, QAfterFilterCondition> mapMatches(String pattern,
+      {bool caseSensitive = true}) {
+    return addFilterCondition(FilterCondition(
+      type: ConditionType.Matches,
+      property: 'map',
+      value: pattern,
+      caseSensitive: caseSensitive,
+    ));
+  }
+
+  QueryBuilder<Lang, QAfterFilterCondition> colorEqualTo(Color value) {
+    return addFilterCondition(FilterCondition(
+      type: ConditionType.Eq,
+      property: 'color',
+      value: _LangAdapter._ColorTypeConverter.toIsar(value),
+    ));
+  }
+
+  QueryBuilder<Lang, QAfterFilterCondition> colorGreaterThan(Color value) {
+    return addFilterCondition(FilterCondition(
+      type: ConditionType.Gt,
+      property: 'color',
+      value: _LangAdapter._ColorTypeConverter.toIsar(value),
+    ));
+  }
+
+  QueryBuilder<Lang, QAfterFilterCondition> colorLessThan(Color value) {
+    return addFilterCondition(FilterCondition(
+      type: ConditionType.Lt,
+      property: 'color',
+      value: _LangAdapter._ColorTypeConverter.toIsar(value),
+    ));
+  }
+
+  QueryBuilder<Lang, QAfterFilterCondition> colorBetween(
+      Color lower, Color upper) {
+    return addFilterCondition(FilterCondition.between(
+      property: 'color',
+      lower: _LangAdapter._ColorTypeConverter.toIsar(lower),
+      upper: _LangAdapter._ColorTypeConverter.toIsar(upper),
+    ));
+  }
+}
+
 extension IThemeQueryFilter on QueryBuilder<ITheme, QFilterCondition> {
   QueryBuilder<ITheme, QAfterFilterCondition> idIsNull() {
     return addFilterCondition(FilterCondition(
@@ -1424,6 +2468,10 @@ extension IThemeQueryFilter on QueryBuilder<ITheme, QFilterCondition> {
 
 extension ConnectionQueryLinks on QueryBuilder<Connection, QFilterCondition> {}
 
+extension TemplateQueryLinks on QueryBuilder<Template, QFilterCondition> {}
+
+extension LangQueryLinks on QueryBuilder<Lang, QFilterCondition> {}
+
 extension IThemeQueryLinks on QueryBuilder<ITheme, QFilterCondition> {}
 
 extension ConnectionQueryWhereSortBy on QueryBuilder<Connection, QSortBy> {
@@ -1687,6 +2735,254 @@ extension ConnectionQueryWhereSortThenBy
   }
 }
 
+extension TemplateQueryWhereSortBy on QueryBuilder<Template, QSortBy> {
+  QueryBuilder<Template, QAfterSortBy> sortById() {
+    return addSortByInternal('id', Sort.Asc);
+  }
+
+  QueryBuilder<Template, QAfterSortBy> sortByIdDesc() {
+    return addSortByInternal('id', Sort.Desc);
+  }
+
+  QueryBuilder<Template, QAfterSortBy> sortByTitle() {
+    return addSortByInternal('title', Sort.Asc);
+  }
+
+  QueryBuilder<Template, QAfterSortBy> sortByTitleDesc() {
+    return addSortByInternal('title', Sort.Desc);
+  }
+
+  QueryBuilder<Template, QAfterSortBy> sortByDesc() {
+    return addSortByInternal('desc', Sort.Asc);
+  }
+
+  QueryBuilder<Template, QAfterSortBy> sortByDescDesc() {
+    return addSortByInternal('desc', Sort.Desc);
+  }
+
+  QueryBuilder<Template, QAfterSortBy> sortByLang() {
+    return addSortByInternal('lang', Sort.Asc);
+  }
+
+  QueryBuilder<Template, QAfterSortBy> sortByLangDesc() {
+    return addSortByInternal('lang', Sort.Desc);
+  }
+
+  QueryBuilder<Template, QAfterSortBy> sortByGroup() {
+    return addSortByInternal('group', Sort.Asc);
+  }
+
+  QueryBuilder<Template, QAfterSortBy> sortByGroupDesc() {
+    return addSortByInternal('group', Sort.Desc);
+  }
+
+  QueryBuilder<Template, QAfterSortBy> sortByContent() {
+    return addSortByInternal('content', Sort.Asc);
+  }
+
+  QueryBuilder<Template, QAfterSortBy> sortByContentDesc() {
+    return addSortByInternal('content', Sort.Desc);
+  }
+
+  QueryBuilder<Template, QAfterSortBy> sortByPath() {
+    return addSortByInternal('path', Sort.Asc);
+  }
+
+  QueryBuilder<Template, QAfterSortBy> sortByPathDesc() {
+    return addSortByInternal('path', Sort.Desc);
+  }
+
+  QueryBuilder<Template, QAfterSortBy> sortByMap() {
+    return addSortByInternal('map', Sort.Asc);
+  }
+
+  QueryBuilder<Template, QAfterSortBy> sortByMapDesc() {
+    return addSortByInternal('map', Sort.Desc);
+  }
+
+  QueryBuilder<Template, QAfterSortBy> sortByCreateAt() {
+    return addSortByInternal('createAt', Sort.Asc);
+  }
+
+  QueryBuilder<Template, QAfterSortBy> sortByCreateAtDesc() {
+    return addSortByInternal('createAt', Sort.Desc);
+  }
+
+  QueryBuilder<Template, QAfterSortBy> sortByUpdateAt() {
+    return addSortByInternal('updateAt', Sort.Asc);
+  }
+
+  QueryBuilder<Template, QAfterSortBy> sortByUpdateAtDesc() {
+    return addSortByInternal('updateAt', Sort.Desc);
+  }
+}
+
+extension TemplateQueryWhereSortThenBy on QueryBuilder<Template, QSortThenBy> {
+  QueryBuilder<Template, QAfterSortBy> thenById() {
+    return addSortByInternal('id', Sort.Asc);
+  }
+
+  QueryBuilder<Template, QAfterSortBy> thenByIdDesc() {
+    return addSortByInternal('id', Sort.Desc);
+  }
+
+  QueryBuilder<Template, QAfterSortBy> thenByTitle() {
+    return addSortByInternal('title', Sort.Asc);
+  }
+
+  QueryBuilder<Template, QAfterSortBy> thenByTitleDesc() {
+    return addSortByInternal('title', Sort.Desc);
+  }
+
+  QueryBuilder<Template, QAfterSortBy> thenByDesc() {
+    return addSortByInternal('desc', Sort.Asc);
+  }
+
+  QueryBuilder<Template, QAfterSortBy> thenByDescDesc() {
+    return addSortByInternal('desc', Sort.Desc);
+  }
+
+  QueryBuilder<Template, QAfterSortBy> thenByLang() {
+    return addSortByInternal('lang', Sort.Asc);
+  }
+
+  QueryBuilder<Template, QAfterSortBy> thenByLangDesc() {
+    return addSortByInternal('lang', Sort.Desc);
+  }
+
+  QueryBuilder<Template, QAfterSortBy> thenByGroup() {
+    return addSortByInternal('group', Sort.Asc);
+  }
+
+  QueryBuilder<Template, QAfterSortBy> thenByGroupDesc() {
+    return addSortByInternal('group', Sort.Desc);
+  }
+
+  QueryBuilder<Template, QAfterSortBy> thenByContent() {
+    return addSortByInternal('content', Sort.Asc);
+  }
+
+  QueryBuilder<Template, QAfterSortBy> thenByContentDesc() {
+    return addSortByInternal('content', Sort.Desc);
+  }
+
+  QueryBuilder<Template, QAfterSortBy> thenByPath() {
+    return addSortByInternal('path', Sort.Asc);
+  }
+
+  QueryBuilder<Template, QAfterSortBy> thenByPathDesc() {
+    return addSortByInternal('path', Sort.Desc);
+  }
+
+  QueryBuilder<Template, QAfterSortBy> thenByMap() {
+    return addSortByInternal('map', Sort.Asc);
+  }
+
+  QueryBuilder<Template, QAfterSortBy> thenByMapDesc() {
+    return addSortByInternal('map', Sort.Desc);
+  }
+
+  QueryBuilder<Template, QAfterSortBy> thenByCreateAt() {
+    return addSortByInternal('createAt', Sort.Asc);
+  }
+
+  QueryBuilder<Template, QAfterSortBy> thenByCreateAtDesc() {
+    return addSortByInternal('createAt', Sort.Desc);
+  }
+
+  QueryBuilder<Template, QAfterSortBy> thenByUpdateAt() {
+    return addSortByInternal('updateAt', Sort.Asc);
+  }
+
+  QueryBuilder<Template, QAfterSortBy> thenByUpdateAtDesc() {
+    return addSortByInternal('updateAt', Sort.Desc);
+  }
+}
+
+extension LangQueryWhereSortBy on QueryBuilder<Lang, QSortBy> {
+  QueryBuilder<Lang, QAfterSortBy> sortById() {
+    return addSortByInternal('id', Sort.Asc);
+  }
+
+  QueryBuilder<Lang, QAfterSortBy> sortByIdDesc() {
+    return addSortByInternal('id', Sort.Desc);
+  }
+
+  QueryBuilder<Lang, QAfterSortBy> sortByLang() {
+    return addSortByInternal('lang', Sort.Asc);
+  }
+
+  QueryBuilder<Lang, QAfterSortBy> sortByLangDesc() {
+    return addSortByInternal('lang', Sort.Desc);
+  }
+
+  QueryBuilder<Lang, QAfterSortBy> sortByDesc() {
+    return addSortByInternal('desc', Sort.Asc);
+  }
+
+  QueryBuilder<Lang, QAfterSortBy> sortByDescDesc() {
+    return addSortByInternal('desc', Sort.Desc);
+  }
+
+  QueryBuilder<Lang, QAfterSortBy> sortByMap() {
+    return addSortByInternal('map', Sort.Asc);
+  }
+
+  QueryBuilder<Lang, QAfterSortBy> sortByMapDesc() {
+    return addSortByInternal('map', Sort.Desc);
+  }
+
+  QueryBuilder<Lang, QAfterSortBy> sortByColor() {
+    return addSortByInternal('color', Sort.Asc);
+  }
+
+  QueryBuilder<Lang, QAfterSortBy> sortByColorDesc() {
+    return addSortByInternal('color', Sort.Desc);
+  }
+}
+
+extension LangQueryWhereSortThenBy on QueryBuilder<Lang, QSortThenBy> {
+  QueryBuilder<Lang, QAfterSortBy> thenById() {
+    return addSortByInternal('id', Sort.Asc);
+  }
+
+  QueryBuilder<Lang, QAfterSortBy> thenByIdDesc() {
+    return addSortByInternal('id', Sort.Desc);
+  }
+
+  QueryBuilder<Lang, QAfterSortBy> thenByLang() {
+    return addSortByInternal('lang', Sort.Asc);
+  }
+
+  QueryBuilder<Lang, QAfterSortBy> thenByLangDesc() {
+    return addSortByInternal('lang', Sort.Desc);
+  }
+
+  QueryBuilder<Lang, QAfterSortBy> thenByDesc() {
+    return addSortByInternal('desc', Sort.Asc);
+  }
+
+  QueryBuilder<Lang, QAfterSortBy> thenByDescDesc() {
+    return addSortByInternal('desc', Sort.Desc);
+  }
+
+  QueryBuilder<Lang, QAfterSortBy> thenByMap() {
+    return addSortByInternal('map', Sort.Asc);
+  }
+
+  QueryBuilder<Lang, QAfterSortBy> thenByMapDesc() {
+    return addSortByInternal('map', Sort.Desc);
+  }
+
+  QueryBuilder<Lang, QAfterSortBy> thenByColor() {
+    return addSortByInternal('color', Sort.Asc);
+  }
+
+  QueryBuilder<Lang, QAfterSortBy> thenByColorDesc() {
+    return addSortByInternal('color', Sort.Desc);
+  }
+}
+
 extension IThemeQueryWhereSortBy on QueryBuilder<ITheme, QSortBy> {
   QueryBuilder<ITheme, QAfterSortBy> sortById() {
     return addSortByInternal('id', Sort.Asc);
@@ -1938,6 +3234,76 @@ extension ConnectionQueryWhereDistinct on QueryBuilder<Connection, QDistinct> {
   }
 }
 
+extension TemplateQueryWhereDistinct on QueryBuilder<Template, QDistinct> {
+  QueryBuilder<Template, QDistinct> distinctById() {
+    return addDistinctByInternal('id');
+  }
+
+  QueryBuilder<Template, QDistinct> distinctByTitle(
+      {bool caseSensitive = true}) {
+    return addDistinctByInternal('title', caseSensitive: caseSensitive);
+  }
+
+  QueryBuilder<Template, QDistinct> distinctByDesc(
+      {bool caseSensitive = true}) {
+    return addDistinctByInternal('desc', caseSensitive: caseSensitive);
+  }
+
+  QueryBuilder<Template, QDistinct> distinctByLang(
+      {bool caseSensitive = true}) {
+    return addDistinctByInternal('lang', caseSensitive: caseSensitive);
+  }
+
+  QueryBuilder<Template, QDistinct> distinctByGroup(
+      {bool caseSensitive = true}) {
+    return addDistinctByInternal('group', caseSensitive: caseSensitive);
+  }
+
+  QueryBuilder<Template, QDistinct> distinctByContent(
+      {bool caseSensitive = true}) {
+    return addDistinctByInternal('content', caseSensitive: caseSensitive);
+  }
+
+  QueryBuilder<Template, QDistinct> distinctByPath(
+      {bool caseSensitive = true}) {
+    return addDistinctByInternal('path', caseSensitive: caseSensitive);
+  }
+
+  QueryBuilder<Template, QDistinct> distinctByMap({bool caseSensitive = true}) {
+    return addDistinctByInternal('map', caseSensitive: caseSensitive);
+  }
+
+  QueryBuilder<Template, QDistinct> distinctByCreateAt() {
+    return addDistinctByInternal('createAt');
+  }
+
+  QueryBuilder<Template, QDistinct> distinctByUpdateAt() {
+    return addDistinctByInternal('updateAt');
+  }
+}
+
+extension LangQueryWhereDistinct on QueryBuilder<Lang, QDistinct> {
+  QueryBuilder<Lang, QDistinct> distinctById() {
+    return addDistinctByInternal('id');
+  }
+
+  QueryBuilder<Lang, QDistinct> distinctByLang({bool caseSensitive = true}) {
+    return addDistinctByInternal('lang', caseSensitive: caseSensitive);
+  }
+
+  QueryBuilder<Lang, QDistinct> distinctByDesc({bool caseSensitive = true}) {
+    return addDistinctByInternal('desc', caseSensitive: caseSensitive);
+  }
+
+  QueryBuilder<Lang, QDistinct> distinctByMap({bool caseSensitive = true}) {
+    return addDistinctByInternal('map', caseSensitive: caseSensitive);
+  }
+
+  QueryBuilder<Lang, QDistinct> distinctByColor() {
+    return addDistinctByInternal('color');
+  }
+}
+
 extension IThemeQueryWhereDistinct on QueryBuilder<ITheme, QDistinct> {
   QueryBuilder<ITheme, QDistinct> distinctById() {
     return addDistinctByInternal('id');
@@ -2043,6 +3409,70 @@ extension ConnectionQueryProperty on QueryBuilder<Connection, QQueryProperty> {
 
   QueryBuilder<DateTime?, QQueryOperations> lastOpenAtProperty() {
     return addPropertyName('lastOpenAt');
+  }
+
+  QueryBuilder<Color, QQueryOperations> colorProperty() {
+    return addPropertyName('color');
+  }
+}
+
+extension TemplateQueryProperty on QueryBuilder<Template, QQueryProperty> {
+  QueryBuilder<int?, QQueryOperations> idProperty() {
+    return addPropertyName('id');
+  }
+
+  QueryBuilder<String, QQueryOperations> titleProperty() {
+    return addPropertyName('title');
+  }
+
+  QueryBuilder<String?, QQueryOperations> descProperty() {
+    return addPropertyName('desc');
+  }
+
+  QueryBuilder<String, QQueryOperations> langProperty() {
+    return addPropertyName('lang');
+  }
+
+  QueryBuilder<String?, QQueryOperations> groupProperty() {
+    return addPropertyName('group');
+  }
+
+  QueryBuilder<String, QQueryOperations> contentProperty() {
+    return addPropertyName('content');
+  }
+
+  QueryBuilder<String, QQueryOperations> pathProperty() {
+    return addPropertyName('path');
+  }
+
+  QueryBuilder<Map<String, String>, QQueryOperations> mapProperty() {
+    return addPropertyName('map');
+  }
+
+  QueryBuilder<DateTime, QQueryOperations> createAtProperty() {
+    return addPropertyName('createAt');
+  }
+
+  QueryBuilder<DateTime?, QQueryOperations> updateAtProperty() {
+    return addPropertyName('updateAt');
+  }
+}
+
+extension LangQueryProperty on QueryBuilder<Lang, QQueryProperty> {
+  QueryBuilder<int?, QQueryOperations> idProperty() {
+    return addPropertyName('id');
+  }
+
+  QueryBuilder<String, QQueryOperations> langProperty() {
+    return addPropertyName('lang');
+  }
+
+  QueryBuilder<String?, QQueryOperations> descProperty() {
+    return addPropertyName('desc');
+  }
+
+  QueryBuilder<Map<String, String>, QQueryOperations> mapProperty() {
+    return addPropertyName('map');
   }
 
   QueryBuilder<Color, QQueryOperations> colorProperty() {

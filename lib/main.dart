@@ -44,46 +44,47 @@ void main() async {
 @hwidget
 Widget myApp() {
   final selectedTheme = useProvider(selectedThemeProvider);
-  return selectedTheme.when(data: (theme) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      initialRoute: Routes.ROOT,
-      theme: theme.theme(),
-      darkTheme: theme.theme(darkTheme: true),
-      themeMode: ThemeMode.system,
-      onGenerateRoute: (settings) {
-        settings.name.d();
-        switch (settings.name) {
-          case Routes.ROOT:
-            return MaterialPageRoute<void>(
-              builder: (context) => const HomePage(),
-              settings: settings,
-            );
-        }
-        return null;
+  return selectedTheme.when(
+      data: (theme) {
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          initialRoute: Routes.ROOT,
+          theme: theme.theme(),
+          darkTheme: theme.theme(darkTheme: true),
+          themeMode: ThemeMode.system,
+          onGenerateRoute: (settings) {
+            settings.name.d();
+            switch (settings.name) {
+              case Routes.ROOT:
+                return MaterialPageRoute<void>(
+                  builder: (context) => const HomePage(),
+                  settings: settings,
+                );
+            }
+            return null;
+          },
+        );
       },
-    );
-  }, loading: () {
-    return CupertinoActivityIndicator();
-  }, error: (_, __) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      initialRoute: Routes.ROOT,
-      theme: defaultTheme.theme(),
-      darkTheme: defaultTheme.theme(darkTheme: true),
-      onGenerateRoute: (settings) {
-        settings.name.d();
-        switch (settings.name) {
-          case Routes.ROOT:
-            return MaterialPageRoute<void>(
-              builder: (context) => const HomePage(),
-              settings: settings,
-            );
-        }
-        return null;
-      },
-    );
-  });
+      loading: () => const CupertinoActivityIndicator(),
+      error: (_, __) {
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          initialRoute: Routes.ROOT,
+          theme: defaultTheme.theme(),
+          darkTheme: defaultTheme.theme(darkTheme: true),
+          onGenerateRoute: (settings) {
+            settings.name.d();
+            switch (settings.name) {
+              case Routes.ROOT:
+                return MaterialPageRoute<void>(
+                  builder: (context) => const HomePage(),
+                  settings: settings,
+                );
+            }
+            return null;
+          },
+        );
+      });
 }
 
 @swidget

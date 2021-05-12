@@ -56,11 +56,11 @@ Widget navRail(BuildContext context) {
       contentPanelNavKey.currentState!.pushNamed(item.route);
     },
     destinations: [
-      for (final item in destinationItems)
+      for (int i = 0; i < destinationItems.length; i++)
         NavigationRailDestination(
           padding: EdgeInsets.zero,
           icon: Icon(
-            item.unselected,
+            destinationItems[i].unselected,
             size: 32.0,
           ),
           selectedIcon: ShaderMask(
@@ -77,18 +77,41 @@ Widget navRail(BuildContext context) {
               ).createShader(bounds);
             },
             child: Icon(
-              item.selected,
+              destinationItems[i].selected,
               size: 32.0,
             ),
           ),
-          label: Text(
-            item.label,
-            style: const TextStyle(
-              fontSize: 18.0,
-              height: 1.25,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
+          label: i == selectedIndex
+              ? ShaderMask(
+                  blendMode: BlendMode.srcATop,
+                  shaderCallback: (Rect bounds) {
+                    return RadialGradient(
+                      center: Alignment.center,
+                      radius: 1.0,
+                      colors: [
+                        themeData.primaryColor,
+                        themeData.accentColor,
+                      ],
+                      tileMode: TileMode.repeated,
+                    ).createShader(bounds);
+                  },
+                  child: Text(
+                    destinationItems[i].label,
+                    style: const TextStyle(
+                      fontSize: 18.0,
+                      height: 1.25,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                )
+              : Text(
+                  destinationItems[i].label,
+                  style: const TextStyle(
+                    fontSize: 18.0,
+                    height: 1.25,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
         ),
     ],
     leading: const NavRailLeading(),
@@ -186,68 +209,79 @@ Widget contentPanel() {
 
 @hwidget
 Widget controlButtonGroup(BuildContext context) {
-  final index = useProvider(windowButtonHoverIndexProvider).state;
   final widgets = <Widget>[Expanded(child: MoveWindow())];
   final length = controlButtonColors.length;
   for (var i = 0; i < length; i++) {
-    widgets.add(MouseRegion(
-      onEnter: (_) {
-        context.read(windowButtonHoverIndexProvider).state = i;
-      },
-      onExit: (_) {
-        context.read(windowButtonHoverIndexProvider).state = -1;
-      },
-      child: InkWell(
-        onTap: controlButtonActions[i],
-        borderRadius: const BorderRadius.all(const Radius.circular(16)),
-        child: Tooltip(
-          message: controlButtonTooltips[i],
-          textStyle: TextStyle(
-            color: Colors.black,
-            fontSize: 12.0,
-          ),
-          decoration: const BoxDecoration(
-            borderRadius: const BorderRadius.all(
-              const Radius.circular(4.0),
-            ),
-            color: Colors.white,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black26,
-                blurRadius: 4.0,
-              )
-            ],
-          ),
-          child: Container(
-            decoration: BoxDecoration(
-              color: controlButtonColors[i],
-              borderRadius: BorderRadius.circular(8.0),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black12,
-                  blurRadius: 2.0,
-                ),
-              ],
-            ),
-            margin: const EdgeInsets.all(6.0),
-            padding: const EdgeInsets.all(2.0),
-            child: AnimatedOpacity(
-              duration: const Duration(milliseconds: 100),
-              opacity: index == i ? 1.0 : 0.0,
-              child: Icon(
-                controlButtonIcons[i],
-                size: 12.0,
-              ),
-            ),
-          ),
-        ),
+    widgets.add(
+      ProviderScope(
+        overrides: [windowButtonIndexProvider.overrideWithValue(i)],
+        child: const ControlButton(),
       ),
-    ));
+    );
   }
   widgets.add(const SizedBox(width: 6.0));
   return WindowTitleBarBox(
     child: Row(
       children: widgets,
+    ),
+  );
+}
+
+@hwidget
+Widget controlButton(BuildContext context) {
+  final index = useProvider(windowButtonIndexProvider);
+  final hoverIndex = useProvider(windowButtonHoverIndexProvider).state;
+  return MouseRegion(
+    onEnter: (_) {
+      context.read(windowButtonHoverIndexProvider).state = index;
+    },
+    onExit: (_) {
+      context.read(windowButtonHoverIndexProvider).state = -1;
+    },
+    child: InkWell(
+      onTap: controlButtonActions[index],
+      borderRadius: const BorderRadius.all(const Radius.circular(16)),
+      child: Tooltip(
+        message: controlButtonTooltips[index],
+        textStyle: const TextStyle(
+          color: Colors.black,
+          fontSize: 12.0,
+        ),
+        decoration: const BoxDecoration(
+          borderRadius: const BorderRadius.all(
+            const Radius.circular(4.0),
+          ),
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black26,
+              blurRadius: 4.0,
+            )
+          ],
+        ),
+        child: Container(
+          decoration: BoxDecoration(
+            color: controlButtonColors[index],
+            borderRadius: BorderRadius.circular(8.0),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black12,
+                blurRadius: 2.0,
+              ),
+            ],
+          ),
+          margin: const EdgeInsets.all(6.0),
+          padding: const EdgeInsets.all(2.0),
+          child: AnimatedOpacity(
+            duration: const Duration(milliseconds: 100),
+            opacity: hoverIndex == index ? 1.0 : 0.0,
+            child: Icon(
+              controlButtonIcons[index],
+              size: 12.0,
+            ),
+          ),
+        ),
+      ),
     ),
   );
 }
