@@ -1,0 +1,76 @@
+name: dbgen
+description: A code generation tool based on Database.
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=2.12.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_hooks: ^0.16.0
+  hooks_riverpod: ^0.14.0+3
+  functional_widget_annotation: ^0.9.0
+  bitsdojo_window: ^0.1.0+1
+  mysql1: ^0.19.2
+  isar: ^0.4.0
+  isar_flutter_libs: ^0.4.0
+  mustache_template: ^2.0.0
+  fluentui_system_icons: ^1.1.122
+  flutter_highlight: ^0.7.0
+  animations: ^2.0.0
+  intl: ^0.17.0
+  extended_sliver: ^2.0.0
+  sliver_tools: ^0.2.2
+  tuple: ^2.0.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  msix: ^2.1.0
+  functional_widget: ^0.9.0+1
+  build_runner: ^2.0.2
+  isar_generator: ^0.4.0
+  pedantic: ^1.11.0
+
+#dependency_overrides:
+#  isar:
+#    git:
+#      url: https://github.com/isar/isar
+#      path: packages/isar
+#  isar_flutter_libs:
+#    git:
+#      url: https://github.com/isar/isar
+#      path: packages/isar_flutter_libs
+#  isar_generator:
+#    git:
+#      url: https://github.com/isar/isar
+#      path: packages/isar_generator
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/fonts/mono/AUTHORS.txt
+    - assets/fonts/mono/OFL.txt
+
+  fonts:
+    - family: mono
+      fonts:
+        - asset: assets/fonts/mono/JetBrainsMono-Bold.ttf
+        - asset: assets/fonts/mono/JetBrainsMono-Bold-Italic.ttf
+        - asset: assets/fonts/mono/JetBrainsMono-BoldItalic.ttf
+        - asset: assets/fonts/mono/JetBrainsMono-ExtraBold.ttf
+        - asset: assets/fonts/mono/JetBrainsMono-ExtraBold-Italic.ttf
+        - asset: assets/fonts/mono/JetBrainsMono-ExtraBoldItalic.ttf
+        - asset: assets/fonts/mono/JetBrainsMono-ExtraLight.ttf
+        - asset: assets/fonts/mono/JetBrainsMono-ExtraLightItalic.ttf
+        - asset: assets/fonts/mono/JetBrainsMono-Italic.ttf
+        - asset: assets/fonts/mono/JetBrainsMono-Light.ttf
+        - asset: assets/fonts/mono/JetBrainsMono-LightItalic.ttf
+        - asset: assets/fonts/mono/JetBrainsMono-Medium.ttf
+        - asset: assets/fonts/mono/JetBrainsMono-Medium-Italic.ttf
+        - asset: assets/fonts/mono/JetBrainsMono-MediumItalic.ttf
+        - asset: assets/fonts/mono/JetBrainsMono-Regular.ttf
+        - asset: assets/fonts/mono/JetBrainsMono-Thin.ttf
+        - asset: assets/fonts/mono/JetBrainsMono-ThinItalic.ttf
