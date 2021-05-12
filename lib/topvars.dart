@@ -89,3 +89,10 @@ const sizedBoxH24 = const SizedBox(height: 24.0);
 const sizedBoxH36 = const SizedBox(height: 36.0);
 const sizedBoxW12 = const SizedBox(width: 12.0);
 const sizedBoxW16 = const SizedBox(width: 16.0);
+
+const sysDB = const {
+  "information_schema",
+  "sys",
+  "mysql",
+  "performance_schema",
+};

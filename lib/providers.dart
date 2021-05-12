@@ -10,6 +10,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:isar/isar.dart';
 import 'package:tuple/tuple.dart';
 
+import 'topvars.dart';
+
 class RiverpodLogger extends ProviderObserver {
   const RiverpodLogger();
 
@@ -73,7 +75,18 @@ final groupedTablesProvider =
   final repo = await ref.watch(dbRepoProvider.future);
   ref.read(tableSearchProvider.notifier).state = "";
   ref.read(dbFilterProvider.notifier).clear();
-  return await repo.groupedTables();
+  final showSys = ref.watch(showSysDBProvider).state;
+  final groupTables = await repo.groupedTables();
+  if (!showSys) {
+    final noSys = <String, Iterable<Table>>{};
+    groupTables.forEach((key, value) {
+      if (!sysDB.contains(key.toLowerCase())) {
+        noSys[key] = value;
+      }
+    });
+    return noSys;
+  }
+  return groupTables;
 });
 
 final filteredGroupedTablesProvider =
@@ -120,7 +133,7 @@ final tableItemIsSelectedProvider = ScopedProvider<bool>(null);
 
 final filteredTableProvider =
     FutureProvider.autoDispose<Tuple4<int, int, int, int>>((ref) async {
-  final full = await ref.read(groupedTablesProvider.future);
+  final full = await ref.watch(groupedTablesProvider.future);
   final filtered = ref.watch(filteredGroupedTablesProvider);
   if (full.isEmpty) {
     return Tuple4(0, 0, 0, 0);
@@ -144,6 +157,8 @@ final filteredTableProvider =
 });
 
 final tableSearchProvider = StateProvider((ref) => "");
+
+final showSysDBProvider = StateProvider((ref) => false);
 
 final dbFilterProvider = StateNotifierProvider<DBFilterNotifier, Set<String>>(
     (ref) => DBFilterNotifier());

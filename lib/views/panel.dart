@@ -263,8 +263,8 @@ Widget controlButton(BuildContext context) {
           decoration: BoxDecoration(
             color: controlButtonColors[index],
             borderRadius: BorderRadius.circular(8.0),
-            boxShadow: [
-              BoxShadow(
+            boxShadow: const [
+              const BoxShadow(
                 color: Colors.black12,
                 blurRadius: 2.0,
               ),
@@ -278,6 +278,7 @@ Widget controlButton(BuildContext context) {
             child: Icon(
               controlButtonIcons[index],
               size: 12.0,
+              color: Colors.black,
             ),
           ),
         ),
