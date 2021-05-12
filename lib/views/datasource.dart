@@ -62,7 +62,7 @@ Widget datasourceFragment() {
       crossAxisSpacing: 16.0,
       mainAxisSpacing: 16.0,
       minCrossAxisExtent: 300.0,
-      mainAxisExtent: 146.0,
+      mainAxisExtent: 150.0,
     ),
   );
 }
@@ -102,7 +102,6 @@ Widget addDatasourceItem(BuildContext context) {
 Widget datasourceItem(BuildContext context) {
   final connection = useProvider(connectionItemProvider)!;
   final themeData = Theme.of(context);
-  final bgc = themeData.backgroundColor;
   return Oc(
     (_, __) {
       context
@@ -111,145 +110,157 @@ Widget datasourceItem(BuildContext context) {
       return const DatasourceDetailPage();
     },
     (_, action) {
-      return GestureDetector(
-        onTap: action,
-        child: Container(
-          padding: const EdgeInsets.only(
-            left: 16.0,
-            right: 8.0,
-            top: 16.0,
-          ),
-          decoration: BoxDecoration(
-            color: bgc,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
+      return Material(
+        child: Ink(
+          color: themeData.backgroundColor,
+          child: InkWell(
+            onTap: action,
+            splashColor: themeData.scaffoldBackgroundColor,
+            hoverColor: themeData.scaffoldBackgroundColor,
+            focusColor: themeData.scaffoldBackgroundColor,
+            enableFeedback: true,
+            child: Container(
+              padding: const EdgeInsets.only(
+                left: 16.0,
+                right: 8.0,
+                top: 16.0,
+              ),
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: themeData.backgroundColor,
+                  width: 4.0,
+                ),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  CircleAvatar(
-                    radius: 18.0,
-                    backgroundColor: connection.color,
-                    child: Text(
-                      connection.title.characters.first.toUpperCase(),
-                      style: TextStyle(
-                        height: 1.25,
-                        color: connection.color.computeLuminance() > 0.5
-                            ? Colors.black
-                            : Colors.white,
-                        fontWeight: FontWeight.w500,
-                        fontFamily: monoFont,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 8.0,
-                  ),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          connection.title,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
-                            fontSize: 14.0,
-                            height: 1.4,
+                  Row(
+                    children: [
+                      CircleAvatar(
+                        radius: 18.0,
+                        backgroundColor: connection.color,
+                        child: Text(
+                          connection.title.characters.first.toUpperCase(),
+                          style: TextStyle(
+                            height: 1.25,
+                            color: connection.color.computeLuminance() > 0.5
+                                ? Colors.black
+                                : Colors.white,
                             fontWeight: FontWeight.w500,
                             fontFamily: monoFont,
                           ),
                         ),
-                        Text(
-                          connection.desc.isNullOrBlank
-                              ? "暂无描述"
-                              : connection.desc!,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
-                            fontSize: 10.0,
-                            height: 1.4,
+                      ),
+                      const SizedBox(
+                        width: 8.0,
+                      ),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              connection.title,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                fontSize: 14.0,
+                                height: 1.4,
+                                fontWeight: FontWeight.w500,
+                                fontFamily: monoFont,
+                              ),
+                            ),
+                            Text(
+                              connection.desc.isNullOrBlank
+                                  ? "暂无描述"
+                                  : connection.desc!,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                fontSize: 10.0,
+                                height: 1.4,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  sizedBoxH12,
+                  Text(
+                    "主机地址: ${connection.host}",
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      height: 1.5,
+                      fontSize: 12.0,
+                      fontFamily: monoFont,
+                    ),
+                  ),
+                  Text(
+                    "端口: ${connection.port}",
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      height: 1.5,
+                      fontSize: 12.0,
+                      fontFamily: monoFont,
+                    ),
+                  ),
+                  const Spacer(),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          connection.lastOpenAt != null
+                              ? "上次连接: ${dateFormatter.format(connection.lastOpenAt!)}"
+                              : connection.updateAt != null
+                                  ? "上次修改: ${dateFormatter.format(connection.updateAt!)}"
+                                  : "创建时间: ${dateFormatter.format(connection.createAt)}",
+                          style: TextStyle(
+                            height: 1.25,
+                            fontSize: 12.0,
+                            fontFamily: monoFont,
                           ),
                         ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              sizedBoxH12,
-              Text(
-                "主机地址: ${connection.host}",
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
-                  height: 1.5,
-                  fontSize: 12.0,
-                  fontFamily: monoFont,
-                ),
-              ),
-              Text(
-                "端口: ${connection.port}",
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
-                  height: 1.5,
-                  fontSize: 12.0,
-                  fontFamily: monoFont,
-                ),
-              ),
-              const Spacer(),
-              Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      connection.lastOpenAt != null
-                          ? "上次连接: ${dateFormatter.format(connection.lastOpenAt!)}"
-                          : connection.updateAt != null
-                              ? "上次修改: ${dateFormatter.format(connection.updateAt!)}"
-                              : "创建时间: ${dateFormatter.format(connection.createAt)}",
-                      style: TextStyle(
-                        height: 1.25,
-                        fontSize: 12.0,
-                        fontFamily: monoFont,
                       ),
-                    ),
-                  ),
-                  PopupMenuButton<int>(
-                    icon: Icon(
-                      FluentIcons.more_horizontal_24_regular,
-                    ),
-                    tooltip: "更多",
-                    onSelected: (value) {
-                      if (value == 1) {
-                        context
-                            .read(editConnectionNotifierProvider.notifier)
-                            .copyFrom(connection);
-                        contentPanelNavKey.currentState!
-                            .pushNamed(Routes.DATASOURCE_EDIT);
-                      } else if (value == 2) {
-                        context
-                            .read(editConnectionNotifierProvider.notifier)
-                            .copySameFrom(connection);
-                        contentPanelNavKey.currentState!
-                            .pushNamed(Routes.DATASOURCE_EDIT);
-                      }
-                    },
-                    itemBuilder: (context) {
-                      return [
-                        PopupMenuItem(
-                          value: 1,
-                          child: Text("编辑"),
+                      PopupMenuButton<int>(
+                        icon: Icon(
+                          FluentIcons.more_horizontal_24_regular,
                         ),
-                        PopupMenuItem(
-                          value: 2,
-                          child: Text("从当前新增"),
-                        ),
-                      ];
-                    },
+                        tooltip: "更多",
+                        onSelected: (value) {
+                          if (value == 1) {
+                            context
+                                .read(editConnectionNotifierProvider.notifier)
+                                .copyFrom(connection);
+                            contentPanelNavKey.currentState!
+                                .pushNamed(Routes.DATASOURCE_EDIT);
+                          } else if (value == 2) {
+                            context
+                                .read(editConnectionNotifierProvider.notifier)
+                                .copySameFrom(connection);
+                            contentPanelNavKey.currentState!
+                                .pushNamed(Routes.DATASOURCE_EDIT);
+                          }
+                        },
+                        itemBuilder: (context) {
+                          return [
+                            PopupMenuItem(
+                              value: 1,
+                              child: Text("编辑"),
+                            ),
+                            PopupMenuItem(
+                              value: 2,
+                              child: Text("从当前新增"),
+                            ),
+                          ];
+                        },
+                      ),
+                    ],
                   ),
                 ],
               ),
-            ],
+            ),
           ),
         ),
       );
@@ -749,7 +760,7 @@ Widget tableFilterResult() {
 Widget dbFilters(BuildContext context) {
   final groupedTable = useProvider(groupedTablesProvider);
   final filters = useProvider(dbFilterProvider);
-  final bgc = Theme.of(context).backgroundColor;
+  final themeData = Theme.of(context);
   return groupedTable.when(
     data: (data) {
       final int length = data.length;
@@ -760,7 +771,8 @@ Widget dbFilters(BuildContext context) {
         final selected = filters.contains(db);
         final selectedColor = selected ? dbColors[db] : null;
         final textColor =
-            (selectedColor == null ? bgc : selectedColor).computeLuminance() >
+            (selectedColor == null ? themeData.backgroundColor : selectedColor)
+                        .computeLuminance() >
                     0.5
                 ? Colors.black
                 : Colors.white;
@@ -770,7 +782,7 @@ Widget dbFilters(BuildContext context) {
           selectedShadowColor: selectedColor,
           label: Text(db),
           checkmarkColor: textColor,
-          backgroundColor: bgc,
+          backgroundColor: themeData.backgroundColor,
           labelStyle: TextStyle(
             height: 1.25,
             fontSize: 14.0,
@@ -820,112 +832,122 @@ Widget dbFilters(BuildContext context) {
 @hwidget
 Widget tableItem(BuildContext context) {
   final themeData = Theme.of(context);
-  final bgc = themeData.backgroundColor;
   final table = useProvider(tableItemProvider);
   final isSelected = useProvider(tableItemIsSelectedProvider);
   "build_table: ${table.id}".d();
-  return GestureDetector(
-    onTap: () {
-      if (isSelected) {
-        context.read(selectedTableProvider.notifier).remove(table.id);
-      } else {
-        context.read(selectedTableProvider.notifier)[table.id] = table;
-      }
-    },
-    child: AnimatedContainer(
-      padding: const EdgeInsets.only(
-        left: 16.0,
-        right: 8.0,
-        top: 16.0,
-      ),
-      decoration: BoxDecoration(
-        color: bgc,
-        border: Border.all(
-          color: isSelected ? dbColors[table.db] ?? bgc : bgc,
-          width: 4.0,
-        ),
-      ),
-      duration: const Duration(milliseconds: 200),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
+  return Material(
+    child: Ink(
+      color: themeData.backgroundColor,
+      child: InkWell(
+        onTap: () {
+          if (isSelected) {
+            context.read(selectedTableProvider.notifier).remove(table.id);
+          } else {
+            context.read(selectedTableProvider.notifier)[table.id] = table;
+          }
+        },
+        splashColor: themeData.scaffoldBackgroundColor,
+        hoverColor: themeData.scaffoldBackgroundColor,
+        focusColor: themeData.scaffoldBackgroundColor,
+        enableFeedback: true,
+        child: AnimatedContainer(
+          padding: const EdgeInsets.only(
+            left: 16.0,
+            right: 8.0,
+            top: 16.0,
+          ),
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: isSelected
+                  ? dbColors[table.db] ?? themeData.backgroundColor
+                  : themeData.backgroundColor,
+              width: 4.0,
+            ),
+          ),
+          duration: const Duration(milliseconds: 200),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              CircleAvatar(
-                radius: 18.0,
-                backgroundColor: table.color,
-                child: Text(
-                  table.name.characters.first.toUpperCase(),
-                  style: TextStyle(
-                    height: 1.25,
-                    color: table.color.computeLuminance() > 0.5
-                        ? Colors.black
-                        : Colors.white,
-                    fontWeight: FontWeight.w500,
-                    fontFamily: monoFont,
-                  ),
-                ),
-              ),
-              const SizedBox(
-                width: 8.0,
-              ),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      table.name,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        fontSize: 16.0,
+              Row(
+                children: [
+                  CircleAvatar(
+                    radius: 18.0,
+                    backgroundColor: table.color,
+                    child: Text(
+                      table.name.characters.first.toUpperCase(),
+                      style: TextStyle(
                         height: 1.25,
+                        color: table.color.computeLuminance() > 0.5
+                            ? Colors.black
+                            : Colors.white,
                         fontWeight: FontWeight.w500,
                         fontFamily: monoFont,
                       ),
                     ),
-                    Text(
-                      table.comment.isNullOrBlank ? "暂无备注" : table.comment!,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(
+                    width: 8.0,
+                  ),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          table.name,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            fontSize: 16.0,
+                            height: 1.25,
+                            fontWeight: FontWeight.w500,
+                            fontFamily: monoFont,
+                          ),
+                        ),
+                        Text(
+                          table.comment.isNullOrBlank ? "暂无备注" : table.comment!,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            fontSize: 12.0,
+                            height: 1.5,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              const Spacer(),
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      dateFormatter.format(table.updateAt ?? table.createAt),
                       style: const TextStyle(
+                        height: 1.25,
                         fontSize: 12.0,
-                        height: 1.5,
-                        fontWeight: FontWeight.w400,
+                        fontFamily: monoFont,
                       ),
                     ),
-                  ],
-                ),
-              ),
+                  ),
+                  InkWell(
+                    child: const Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: const Icon(
+                        FluentIcons.more_horizontal_24_regular,
+                      ),
+                    ),
+                    onTap: () {
+                      contentPanelNavKey.currentState!
+                          .pushNamed(Routes.DB_TABLE);
+                    },
+                  ),
+                ],
+              )
             ],
           ),
-          const Spacer(),
-          Row(
-            children: [
-              Expanded(
-                child: Text(
-                  dateFormatter.format(table.updateAt ?? table.createAt),
-                  style: TextStyle(
-                    height: 1.25,
-                    fontSize: 12.0,
-                    fontFamily: monoFont,
-                  ),
-                ),
-              ),
-              InkWell(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Icon(
-                    FluentIcons.more_horizontal_24_regular,
-                  ),
-                ),
-                onTap: () {
-                  contentPanelNavKey.currentState!.pushNamed(Routes.DB_TABLE);
-                },
-              ),
-            ],
-          )
-        ],
+        ),
       ),
     ),
   );

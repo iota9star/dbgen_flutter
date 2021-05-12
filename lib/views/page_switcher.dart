@@ -48,13 +48,13 @@ Widget oc<T>(
   Color? openColor,
   Color? closeColor,
 }) {
-  final bgc = Theme.of(context).scaffoldBackgroundColor;
+  final themeData = Theme.of(context);
   return OpenContainer(
     transitionType: transitionType,
     openElevation: 0.0,
     closedElevation: 0.0,
-    openColor: openColor ?? bgc,
-    closedColor: closeColor ?? bgc,
+    openColor: openColor ?? themeData.scaffoldBackgroundColor,
+    closedColor: closeColor ?? themeData.backgroundColor,
     routeSettings: routeSettings,
     closedShape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
     openShape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),

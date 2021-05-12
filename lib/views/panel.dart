@@ -85,9 +85,9 @@ Widget navRail(BuildContext context) {
               ? ShaderMask(
                   blendMode: BlendMode.srcATop,
                   shaderCallback: (Rect bounds) {
-                    return RadialGradient(
-                      center: Alignment.center,
-                      radius: 1.0,
+                    return LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
                       colors: [
                         themeData.primaryColor,
                         themeData.accentColor,
@@ -192,10 +192,7 @@ Widget contentPanel() {
   return Stack(
     children: [
       Positioned.fill(
-        child: const SharedAxisTransitionPageSwitcher(
-          const ContentPanelNavigator(),
-          reverse: true,
-        ),
+        child: const ContentPanelNavigator(),
       ),
       Positioned(
         top: 6.0,
