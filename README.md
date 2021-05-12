@@ -16,10 +16,11 @@ For help getting started with Flutter, view our
 samples, guidance on mobile development, and a full API reference.
 
 ## Screenshot
-| :heart: | :fire: |
-| -----| ---- |
-| ![](static/screenshot/1.png) | ![](static/screenshot/2.png) |
-| ![](static/screenshot/3.png) | ![](static/screenshot/4.png) |
+
+![](static/screenshot/1.png) 
+![](static/screenshot/2.png) 
+![](static/screenshot/3.png) 
+![](static/screenshot/4.png) 
 
 ## Licenses
 
