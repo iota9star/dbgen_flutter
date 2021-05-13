@@ -121,7 +121,6 @@ Widget navRail(BuildContext context) {
 @hwidget
 Widget navRailLeading(BuildContext context) {
   final animation = NavigationRail.extendedAnimation(context);
-  final extended = useProvider(navRailExtendedProvider).state;
   final themeData = Theme.of(context);
   return AnimatedBuilder(
     animation: animation,
@@ -155,12 +154,7 @@ Widget navRailLeading(BuildContext context) {
                         tileMode: TileMode.repeated,
                       ).createShader(bounds);
                     },
-                    child: Icon(
-                      extended
-                          ? FluentIcons.cube_24_filled
-                          : FluentIcons.cube_24_regular,
-                      size: 32.0,
-                    ),
+                    child: const NavRailTopIcon(),
                   ),
                   if (animation.value > 0.5)
                     SizedBox(width: 20.0 * animation.value),
@@ -184,6 +178,15 @@ Widget navRailLeading(BuildContext context) {
         ],
       );
     },
+  );
+}
+
+@hwidget
+Widget navRailTopIcon() {
+  final extended = useProvider(navRailExtendedProvider).state;
+  return Icon(
+    extended ? FluentIcons.cube_24_filled : FluentIcons.cube_24_regular,
+    size: 32.0,
   );
 }
 

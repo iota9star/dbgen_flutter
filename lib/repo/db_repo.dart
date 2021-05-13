@@ -60,7 +60,7 @@ class MySqlOrMariaDBRepo {
       (e) {
         final db = e.fields["db"];
         final name = e.fields["name"];
-        final id = "$db.$name";
+        final id = "$db@$name";
         var color = tableColors[id];
         if (color == null) {
           color = LightColor.random();

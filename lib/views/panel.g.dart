@@ -27,6 +27,13 @@ class NavRailLeading extends HookWidget {
   Widget build(BuildContext _context) => navRailLeading(_context);
 }
 
+class NavRailTopIcon extends HookWidget {
+  const NavRailTopIcon({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext _context) => navRailTopIcon();
+}
+
 class ContentPanel extends HookWidget {
   const ContentPanel({Key? key}) : super(key: key);
 

@@ -41,15 +41,6 @@ class DatasourceHeader extends StatelessWidget {
   Widget build(BuildContext _context) => datasourceHeader();
 }
 
-class NormalHeader extends StatelessWidget {
-  const NormalHeader(this.title, {Key? key}) : super(key: key);
-
-  final String title;
-
-  @override
-  Widget build(BuildContext _context) => normalHeader(title);
-}
-
 class DatasourceDetailPage extends StatelessWidget {
   const DatasourceDetailPage({Key? key}) : super(key: key);
 
@@ -69,6 +60,13 @@ class DbSection extends HookWidget {
 
   @override
   Widget build(BuildContext _context) => dbSection(_context);
+}
+
+class DbSectionCheckbox extends HookWidget {
+  const DbSectionCheckbox({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext _context) => dbSectionCheckbox();
 }
 
 class TableItemProviderScope extends HookWidget {

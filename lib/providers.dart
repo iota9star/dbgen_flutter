@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:collection/collection.dart';
 import 'package:dbgen/ext/ext.dart';
 import 'package:dbgen/isar.g.dart';
 import 'package:dbgen/model/db.dart';
@@ -10,6 +11,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:isar/isar.dart';
 import 'package:tuple/tuple.dart';
 
+import 'model/db.dart';
 import 'topvars.dart';
 
 class RiverpodLogger extends ProviderObserver {
@@ -75,6 +77,7 @@ final groupedTablesProvider =
   final repo = await ref.watch(dbRepoProvider.future);
   ref.read(tableSearchProvider.notifier).state = "";
   ref.read(dbFilterProvider.notifier).clear();
+  ref.read(showSysDBProvider.notifier).state = false;
   final showSys = ref.watch(showSysDBProvider).state;
   final groupTables = await repo.groupedTables();
   if (!showSys) {
@@ -210,6 +213,26 @@ class SelectedTableNotifier extends StateNotifier<Map<String, Table>> {
     notifyListeners();
   }
 }
+
+final dbCheckStateProvider = FutureProvider<Map<String, bool?>>((ref) async {
+  final tables = await ref.read(groupedTablesProvider.future);
+  final selected = ref.watch(selectedTableProvider);
+  final values = selected.values;
+  final selectedGrouped = groupBy(values, (Table it) => it.db);
+  final entries = tables.entries;
+  final map = <String, bool?>{};
+  for (var entry in entries) {
+    final length = selectedGrouped[entry.key]!.length;
+    if (entry.value.length == length) {
+      map[entry.key] = true;
+    } else if (length > 0) {
+      map[entry.key] = null;
+    } else {
+      map[entry.key] = false;
+    }
+  }
+  return map;
+});
 
 final navRailExtendedProvider = StateProvider<bool>((ref) => true);
 final navRailSelectedProvider =

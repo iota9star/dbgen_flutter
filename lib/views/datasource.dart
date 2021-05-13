@@ -16,6 +16,8 @@ import 'package:isar/isar.dart';
 import 'package:mysql1/mysql1.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 
+import '../providers.dart';
+
 part 'datasource.g.dart';
 
 @hwidget
@@ -272,26 +274,6 @@ Widget datasourceHeader() {
 }
 
 @swidget
-Widget normalHeader(String title) {
-  return Padding(
-    padding: const EdgeInsets.only(
-      left: 24.0,
-      right: 24.0,
-      bottom: 12.0,
-      top: 24.0,
-    ),
-    child: Text(
-      title,
-      style: const TextStyle(
-        fontSize: 24.0,
-        fontWeight: FontWeight.bold,
-        height: 1.25,
-      ),
-    ),
-  );
-}
-
-@swidget
 Widget datasourceDetailPage() {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -323,7 +305,7 @@ Widget tableSections(BuildContext context) {
                   overrides: [
                     dbSectionKeyProvider.overrideWithValue(entry.key)
                   ],
-                  child: DbSection(),
+                  child: const DbSection(),
                 ),
                 SliverPadding(
                   padding: const EdgeInsets.only(
@@ -393,14 +375,26 @@ Widget tableSections(BuildContext context) {
 
 @hwidget
 Widget dbSection(BuildContext context) {
-  final key = useProvider(dbSectionKeyProvider);
   final themeData = Theme.of(context);
   return SliverPinnedToBoxAdapter(
     child: Container(
       margin: const EdgeInsets.symmetric(horizontal: 24.0),
       color: themeData.backgroundColor,
-      child: CheckboxListTile(
-        value: false,
+      child: const DbSectionCheckbox(),
+    ),
+  );
+}
+
+@hwidget
+Widget dbSectionCheckbox() {
+  final key = useProvider(dbSectionKeyProvider);
+  final value = useProvider(dbCheckStateProvider
+      .select((map) => map.whenData((value) => value[key])));
+  return value.when(
+    data: (data) {
+      return CheckboxListTile(
+        value: data,
+        tristate: true,
         onChanged: (bool? value) {},
         title: Text(
           key,
@@ -411,7 +405,21 @@ Widget dbSection(BuildContext context) {
           ),
         ),
         secondary: const Icon(FluentIcons.fluent_24_regular),
+      );
+    },
+    loading: () => CupertinoActivityIndicator(),
+    error: (_, __) => CheckboxListTile(
+      value: false,
+      onChanged: (bool? value) {},
+      title: Text(
+        key,
+        style: const TextStyle(
+          height: 1.25,
+          fontSize: 20.0,
+          fontFamily: monoFont,
+        ),
       ),
+      secondary: const Icon(FluentIcons.fluent_24_regular),
     ),
   );
 }
@@ -435,7 +443,7 @@ Widget datasourceDetailHeader() {
     padding: const EdgeInsets.only(
       left: 24.0,
       right: 24.0,
-      top: 24.0,
+      top: 40.0,
     ),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -447,6 +455,7 @@ Widget datasourceDetailHeader() {
             fontWeight: FontWeight.bold,
             height: 1.25,
           ),
+          textAlign: TextAlign.justify,
         ),
         sizedBoxH12,
         const TableSearchBar(),
