@@ -386,41 +386,30 @@ Widget dbSection(BuildContext context) {
 }
 
 @hwidget
-Widget dbSectionCheckbox() {
+Widget dbSectionCheckbox(BuildContext context) {
   final key = useProvider(dbSectionKeyProvider);
-  final value = useProvider(dbCheckStateProvider
-      .select((map) => map.whenData((value) => value[key])));
-  return value.when(
-    data: (data) {
-      return CheckboxListTile(
-        value: data,
-        tristate: true,
-        onChanged: (bool? value) {},
-        title: Text(
-          key,
-          style: const TextStyle(
-            height: 1.25,
-            fontSize: 20.0,
-            fontFamily: monoFont,
-          ),
-        ),
-        secondary: const Icon(FluentIcons.fluent_24_regular),
-      );
+  final value = useProvider(dbCheckStateProvider.select((map) => map[key]));
+  "key: $key, value: $value".d();
+  return CheckboxListTile(
+    value: value,
+    tristate: true,
+    activeColor: dbColors[key],
+    onChanged: (bool? newValue) {
+      if (value == null || newValue == true) {
+        context.read(selectedTableProvider.notifier).check(key);
+      } else {
+        context.read(selectedTableProvider.notifier).uncheck(key);
+      }
     },
-    loading: () => CupertinoActivityIndicator(),
-    error: (_, __) => CheckboxListTile(
-      value: false,
-      onChanged: (bool? value) {},
-      title: Text(
-        key,
-        style: const TextStyle(
-          height: 1.25,
-          fontSize: 20.0,
-          fontFamily: monoFont,
-        ),
+    title: Text(
+      key,
+      style: const TextStyle(
+        height: 1.25,
+        fontSize: 20.0,
+        fontFamily: monoFont,
       ),
-      secondary: const Icon(FluentIcons.fluent_24_regular),
     ),
+    secondary: const Icon(FluentIcons.fluent_24_regular),
   );
 }
 
@@ -793,8 +782,10 @@ Widget dbFilters() {
 @hwidget
 Widget showSysSwitch(BuildContext context) {
   final showSys = useProvider(showSysDBProvider).state;
+  final themeData = Theme.of(context);
   return Checkbox(
     value: showSys,
+    activeColor: themeData.primaryColor,
     onChanged: (value) {
       context.read(showSysDBProvider.notifier).state = value ?? false;
     },
@@ -803,7 +794,7 @@ Widget showSysSwitch(BuildContext context) {
 
 @hwidget
 Widget dbItems(BuildContext context) {
-  final groupedTable = useProvider(groupedTablesProvider);
+  final groupedTable = useProvider(dbTablesProvider);
   return groupedTable.when(
       data: (data) {
         final int length = data.length;

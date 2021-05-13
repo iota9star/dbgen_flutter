@@ -77,26 +77,64 @@ final groupedTablesProvider =
   final repo = await ref.watch(dbRepoProvider.future);
   ref.read(tableSearchProvider.notifier).state = "";
   ref.read(dbFilterProvider.notifier).clear();
-  ref.read(showSysDBProvider.notifier).state = false;
+  ref.read(selectedTableProvider.notifier).clear();
+  return await repo.groupedTables();
+});
+
+final dbTablesProvider =
+    FutureProvider.autoDispose<Map<String, Iterable<Table>>>((ref) async {
   final showSys = ref.watch(showSysDBProvider).state;
-  final groupTables = await repo.groupedTables();
+  final groupTables = await ref.watch(groupedTablesProvider.future);
+  final states = <String, int>{};
+  final noSys = <String, Iterable<Table>>{};
+  groupTables.forEach((key, value) {
+    states[key] = value.length;
+    if (!sysDB.contains(key.toLowerCase())) {
+      noSys[key] = value;
+    }
+  });
+  ref.read(dbTableCountStateProvider.notifier).state = states;
   if (!showSys) {
-    final noSys = <String, Iterable<Table>>{};
-    groupTables.forEach((key, value) {
-      if (!sysDB.contains(key.toLowerCase())) {
-        noSys[key] = value;
-      }
-    });
     return noSys;
   }
   return groupTables;
 });
+final dbTableCountStateProvider = StateProvider<Map<String, int>>((ref) => {});
+
+final dbCheckStateProvider =
+    StateNotifierProvider<DBCheckStateNotifier, Map<String, bool?>>((ref) {
+  final countState = ref.read(dbTableCountStateProvider).state;
+  final selected = ref.watch(selectedTableProvider);
+  final values = selected.values;
+  final selectedGrouped = groupBy(values, (Table it) => it.db);
+  final map = <String, bool?>{};
+  countState.forEach((key, length) {
+    final selectedLen = selectedGrouped[key]?.length ?? -1;
+    if (selectedLen == length) {
+      map[key] = true;
+    } else if (selectedLen > 0) {
+      map[key] = null;
+    } else {
+      map[key] = false;
+    }
+  });
+  return DBCheckStateNotifier(map);
+});
+
+class DBCheckStateNotifier extends StateNotifier<Map<String, bool?>> {
+  DBCheckStateNotifier(Map<String, bool?> state) : super(state);
+
+  operator []=(String key, bool? value) {
+    this.state[key] = value;
+    notifyListeners();
+  }
+}
 
 final filteredGroupedTablesProvider =
     FutureProvider.autoDispose<Map<String, Iterable<Table>>>((ref) async {
   final filters = ref.watch(dbFilterProvider);
   final keywords = ref.watch(tableSearchProvider).state;
-  final grouped = ref.watch(groupedTablesProvider);
+  final grouped = ref.watch(dbTablesProvider);
   return grouped.when(
       data: (data) {
         final isBlankKeywords = keywords.isNullOrBlank;
@@ -136,7 +174,7 @@ final tableItemIsSelectedProvider = ScopedProvider<bool>(null);
 
 final filteredTableProvider =
     FutureProvider.autoDispose<Tuple4<int, int, int, int>>((ref) async {
-  final full = await ref.watch(groupedTablesProvider.future);
+  final full = await ref.watch(dbTablesProvider.future);
   final filtered = ref.watch(filteredGroupedTablesProvider);
   if (full.isEmpty) {
     return Tuple4(0, 0, 0, 0);
@@ -198,10 +236,11 @@ class DBFilterNotifier extends StateNotifier<Set<String>> {
 
 final selectedTableProvider =
     StateNotifierProvider<SelectedTableNotifier, Map<String, Table>>(
-        (ref) => SelectedTableNotifier());
+        (ref) => SelectedTableNotifier(ref.read));
 
 class SelectedTableNotifier extends StateNotifier<Map<String, Table>> {
-  SelectedTableNotifier() : super({});
+  SelectedTableNotifier(this.read) : super({});
+  final Reader read;
 
   operator []=(String key, Table value) {
     this.state[key] = value;
@@ -212,27 +251,25 @@ class SelectedTableNotifier extends StateNotifier<Map<String, Table>> {
     this.state.remove(key);
     notifyListeners();
   }
-}
 
-final dbCheckStateProvider = FutureProvider<Map<String, bool?>>((ref) async {
-  final tables = await ref.read(groupedTablesProvider.future);
-  final selected = ref.watch(selectedTableProvider);
-  final values = selected.values;
-  final selectedGrouped = groupBy(values, (Table it) => it.db);
-  final entries = tables.entries;
-  final map = <String, bool?>{};
-  for (var entry in entries) {
-    final length = selectedGrouped[entry.key]!.length;
-    if (entry.value.length == length) {
-      map[entry.key] = true;
-    } else if (length > 0) {
-      map[entry.key] = null;
-    } else {
-      map[entry.key] = false;
-    }
+  void clear() {
+    this.state.clear();
   }
-  return map;
-});
+
+  void uncheck(String db) {
+    this.state.removeWhere((key, value) => value.db == db);
+    notifyListeners();
+  }
+
+  void check(String db) async {
+    final groupedTables = await read(dbTablesProvider.future);
+    groupedTables.d();
+    groupedTables[db]?.forEach((tb) {
+      this.state[tb.id] = tb;
+    });
+    notifyListeners();
+  }
+}
 
 final navRailExtendedProvider = StateProvider<bool>((ref) => true);
 final navRailSelectedProvider =

@@ -66,7 +66,7 @@ class DbSectionCheckbox extends HookWidget {
   const DbSectionCheckbox({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext _context) => dbSectionCheckbox();
+  Widget build(BuildContext _context) => dbSectionCheckbox(_context);
 }
 
 class TableItemProviderScope extends HookWidget {
