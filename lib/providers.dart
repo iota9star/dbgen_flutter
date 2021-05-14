@@ -263,7 +263,6 @@ class SelectedTableNotifier extends StateNotifier<Map<String, Table>> {
 
   void check(String db) async {
     final groupedTables = await read(dbTablesProvider.future);
-    groupedTables.d();
     groupedTables[db]?.forEach((tb) {
       this.state[tb.id] = tb;
     });

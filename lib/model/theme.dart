@@ -25,7 +25,7 @@ class ITheme {
   @ColorTypeConverter()
   late Color darkScaffoldBackgroundColor;
 
-  theme({bool darkTheme = true}) {
+  theme({bool darkTheme = false}) {
     final bool isDark = this.autoMode ? darkTheme : this.isDark;
     final Brightness brightness = isDark ? Brightness.dark : Brightness.light;
     final primaryColor = this.primaryColor;
