@@ -42,7 +42,6 @@ Widget navRail(BuildContext context) {
   final selected = useProvider(navRailSelectedProvider).state;
   final selectedIndex =
       destinationItems.indexWhere((element) => element.route == selected.route);
-  final themeData = Theme.of(context);
   return NavigationRail(
     selectedIndex: selectedIndex,
     labelType: NavigationRailLabelType.none,
@@ -58,60 +57,9 @@ Widget navRail(BuildContext context) {
     destinations: [
       for (int i = 0; i < destinationItems.length; i++)
         NavigationRailDestination(
-          padding: EdgeInsets.zero,
-          icon: Icon(
-            destinationItems[i].unselected,
-            size: 32.0,
-          ),
-          selectedIcon: ShaderMask(
-            blendMode: BlendMode.srcATop,
-            shaderCallback: (Rect bounds) {
-              return RadialGradient(
-                center: Alignment.center,
-                radius: 1.0,
-                colors: [
-                  themeData.primaryColor,
-                  themeData.accentColor,
-                ],
-                tileMode: TileMode.repeated,
-              ).createShader(bounds);
-            },
-            child: Icon(
-              destinationItems[i].selected,
-              size: 32.0,
-            ),
-          ),
-          label: i == selectedIndex
-              ? ShaderMask(
-                  blendMode: BlendMode.srcATop,
-                  shaderCallback: (Rect bounds) {
-                    return LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [
-                        themeData.primaryColor,
-                        themeData.accentColor,
-                      ],
-                      tileMode: TileMode.repeated,
-                    ).createShader(bounds);
-                  },
-                  child: Text(
-                    destinationItems[i].label,
-                    style: const TextStyle(
-                      fontSize: 18.0,
-                      height: 1.25,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                )
-              : Text(
-                  destinationItems[i].label,
-                  style: const TextStyle(
-                    fontSize: 18.0,
-                    height: 1.25,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+          icon: Icon(destinationItems[i].unselected),
+          selectedIcon: Icon(destinationItems[i].selected),
+          label: Text(destinationItems[i].label),
         ),
     ],
     leading: const NavRailLeading(),
@@ -121,7 +69,6 @@ Widget navRail(BuildContext context) {
 @hwidget
 Widget navRailLeading(BuildContext context) {
   final animation = NavigationRail.extendedAnimation(context);
-  final themeData = Theme.of(context);
   return AnimatedBuilder(
     animation: animation,
     builder: (context, child) {
@@ -141,21 +88,7 @@ Widget navRailLeading(BuildContext context) {
               padding: const EdgeInsets.all(20.0),
               child: Row(
                 children: [
-                  ShaderMask(
-                    blendMode: BlendMode.srcATop,
-                    shaderCallback: (Rect bounds) {
-                      return RadialGradient(
-                        center: Alignment.center,
-                        radius: 0.8,
-                        colors: [
-                          themeData.accentColor,
-                          themeData.primaryColor,
-                        ],
-                        tileMode: TileMode.repeated,
-                      ).createShader(bounds);
-                    },
-                    child: const NavRailTopIcon(),
-                  ),
+                  const NavRailTopIcon(),
                   if (animation.value > 0.5)
                     SizedBox(width: 20.0 * animation.value),
                   if (animation.value > 0.5)
@@ -182,11 +115,13 @@ Widget navRailLeading(BuildContext context) {
 }
 
 @hwidget
-Widget navRailTopIcon() {
+Widget navRailTopIcon(BuildContext context) {
   final extended = useProvider(navRailExtendedProvider).state;
+  final themeData = Theme.of(context);
   return Icon(
     extended ? FluentIcons.cube_24_filled : FluentIcons.cube_24_regular,
     size: 32.0,
+    color: themeData.primaryColor,
   );
 }
 
@@ -302,43 +237,49 @@ Widget contentPanelNavigator() {
           page = CupertinoActivityIndicator();
           break;
         case Routes.DASHBOARD:
-          page = FadeThroughTransitionPageSwitcher(DashboardPage());
+          page = FadeThroughTransitionPageSwitcher(const DashboardPage());
           break;
         case Routes.TEMPLATE:
-          page = FadeThroughTransitionPageSwitcher(TemplatePage());
+          page = FadeThroughTransitionPageSwitcher(const TemplatePage());
           break;
         case Routes.TEMPLATE_DETAIL:
           page = SharedAxisTransitionPageSwitcher(
-            TemplateDetailPage(),
+            const TemplateDetailPage(),
             reverse: true,
           );
           break;
         case Routes.TEMPLATE_EDIT:
           page = SharedAxisTransitionPageSwitcher(
-            TemplateEditPage(),
+            const TemplateEditPage(),
             reverse: true,
           );
           break;
         case Routes.DATASOURCE:
-          page = FadeThroughTransitionPageSwitcher(DatasourcePage());
+          page = FadeThroughTransitionPageSwitcher(const DatasourcePage());
           break;
         case Routes.DATASOURCE_EDIT:
           page = SharedAxisTransitionPageSwitcher(
-            DatasourceEditPage(),
+            const DatasourceEditPage(),
             reverse: true,
           );
           break;
         case Routes.DB:
           page = SharedAxisTransitionPageSwitcher(
-            DatasourceDetailPage(),
+            const DatasourceDetailPage(),
+            reverse: true,
+          );
+          break;
+        case Routes.DB_TABLE:
+          page = SharedAxisTransitionPageSwitcher(
+            const TablePage(),
             reverse: true,
           );
           break;
         case Routes.THEME:
-          page = FadeThroughTransitionPageSwitcher(ThemePage());
+          page = FadeThroughTransitionPageSwitcher(const ThemePage());
           break;
         case Routes.ABOUT:
-          page = FadeThroughTransitionPageSwitcher(AboutPage());
+          page = FadeThroughTransitionPageSwitcher(const AboutPage());
           break;
       }
       return MaterialPageRoute<void>(

@@ -116,7 +116,7 @@ class MySqlOrMariaDBRepo {
     // return a.cast();
   }
 
-  Future<Iterable<Column>> columns(String db, String table) async {
+  Future<Iterable<Column>> columns(Table table) async {
     assert(this._conn != null, "MySqlConnection is not init.");
     final String sql = "SELECT "
         "TABLE_SCHEMA as db, "
@@ -135,7 +135,8 @@ class MySqlOrMariaDBRepo {
         "WHERE TABLE_SCHEMA = ? and TABLE_NAME = ? "
         "ORDER BY ordinal_position";
     sql.d();
-    final Results results = await this._conn!.query(sql, [db, table]);
+    final Results results =
+        await this._conn!.query(sql, [table.db, table.name]);
     return results.map(
       (e) {
         var db = e.fields['db'];

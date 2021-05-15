@@ -20,17 +20,13 @@ import '../providers.dart';
 
 part 'datasource.g.dart';
 
-@hwidget
-Widget datasourcePage(BuildContext context) {
-  return Container(
-    width: double.infinity,
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: const [
-        const DatasourceHeader(),
-        const Expanded(child: const DatasourceFragment()),
-      ],
-    ),
+@swidget
+Widget datasourcePage() {
+  return const BasePage(
+    children: const [
+      const DatasourceHeader(),
+      const Expanded(child: const DatasourceFragment()),
+    ],
   );
 }
 
@@ -102,7 +98,7 @@ Widget addDatasourceItem(BuildContext context) {
         action,
       );
     },
-    routeSettings: RouteSettings(name: Routes.DATASOURCE_EDIT),
+    routeSettings: const RouteSettings(name: Routes.DATASOURCE_EDIT),
   );
 }
 
@@ -264,7 +260,7 @@ Widget datasourceItem(BuildContext context) {
         action,
       );
     },
-    routeSettings: RouteSettings(name: Routes.DB),
+    routeSettings: const RouteSettings(name: Routes.DB),
   );
 }
 
@@ -275,9 +271,8 @@ Widget datasourceHeader() {
 
 @swidget
 Widget datasourceDetailPage() {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
+  return const BasePage(
+    children: const [
       const DatasourceDetailHeader(),
       const Expanded(
         child: const Scrollbar(
@@ -409,7 +404,12 @@ Widget dbSectionCheckbox(BuildContext context) {
         fontFamily: monoFont,
       ),
     ),
-    secondary: const Icon(FluentIcons.fluent_24_regular),
+    secondary: Icon(
+      value == true
+          ? FluentIcons.layer_24_filled
+          : FluentIcons.layer_24_regular,
+      color: dbColors[key],
+    ),
   );
 }
 
@@ -943,17 +943,14 @@ Widget tableItem(BuildContext context) {
                   ),
                 ),
               ),
-              InkWell(
-                child: const Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: const Icon(
-                    FluentIcons.more_horizontal_24_regular,
-                  ),
+              IconButton(
+                icon: const Icon(
+                  FluentIcons.more_horizontal_24_regular,
                 ),
-                onTap: () {
+                onPressed: () {
                   contentPanelNavKey.currentState!.pushNamed(Routes.DB_TABLE);
                 },
-              ),
+              )
             ],
           )
         ],
@@ -967,4 +964,16 @@ Widget tableItem(BuildContext context) {
       }
     },
   );
+}
+
+@swidget
+Widget tablePage() {
+  return const BasePage(
+    children: const [const TableHeader()],
+  );
+}
+
+@hwidget
+Widget tableHeader() {
+  return const NormalHeader("");
 }

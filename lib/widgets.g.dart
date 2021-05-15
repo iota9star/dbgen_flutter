@@ -32,3 +32,12 @@ class NormalHeader extends StatelessWidget {
   @override
   Widget build(BuildContext _context) => normalHeader(title);
 }
+
+class BasePage extends StatelessWidget {
+  const BasePage({Key? key, this.children = const []}) : super(key: key);
+
+  final List<Widget> children;
+
+  @override
+  Widget build(BuildContext _context) => basePage(children: children);
+}

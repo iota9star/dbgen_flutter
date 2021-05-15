@@ -6,11 +6,11 @@ part of 'datasource.dart';
 // FunctionalWidgetGenerator
 // **************************************************************************
 
-class DatasourcePage extends HookWidget {
+class DatasourcePage extends StatelessWidget {
   const DatasourcePage({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext _context) => datasourcePage(_context);
+  Widget build(BuildContext _context) => datasourcePage();
 }
 
 class DatasourceFragment extends HookWidget {
@@ -151,4 +151,18 @@ class TableItem extends HookWidget {
 
   @override
   Widget build(BuildContext _context) => tableItem(_context);
+}
+
+class TablePage extends StatelessWidget {
+  const TablePage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext _context) => tablePage();
+}
+
+class TableHeader extends HookWidget {
+  const TableHeader({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext _context) => tableHeader();
 }

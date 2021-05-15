@@ -46,7 +46,7 @@ const destinationItems = const [
   const DestinationItem(
     "主页",
     Routes.DASHBOARD,
-    FluentIcons.sticker_20_regular,
+    FluentIcons.leaf_one_20_regular,
     FluentIcons.leaf_three_20_filled,
   ),
   const DestinationItem(

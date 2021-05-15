@@ -47,6 +47,8 @@ class ITheme {
       fontWeight: FontWeight.bold,
       color: primaryColor,
     );
+    final navRailSelectedIconTheme =
+        IconThemeData(color: primaryColor, size: 32.0);
     ThemeData themeData = ThemeData(
       brightness: brightness,
       cupertinoOverrideTheme: CupertinoThemeData(
@@ -64,6 +66,10 @@ class ITheme {
         backgroundColor: backgroundColor,
         selectedLabelTextStyle: navRailSelectedLabelStyle,
         unselectedLabelTextStyle: navRailSelectedLabelStyle.copyWith(
+          color: isDark ? Colors.white : Colors.black,
+        ),
+        selectedIconTheme: navRailSelectedIconTheme,
+        unselectedIconTheme: navRailSelectedIconTheme.copyWith(
           color: isDark ? Colors.white : Colors.black,
         ),
       ),

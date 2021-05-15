@@ -48,3 +48,11 @@ Widget normalHeader(String title) {
     ),
   );
 }
+
+@swidget
+Widget basePage({List<Widget> children = const []}) {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: children,
+  );
+}

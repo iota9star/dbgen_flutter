@@ -31,7 +31,7 @@ class NavRailTopIcon extends HookWidget {
   const NavRailTopIcon({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext _context) => navRailTopIcon();
+  Widget build(BuildContext _context) => navRailTopIcon(_context);
 }
 
 class ContentPanel extends HookWidget {
