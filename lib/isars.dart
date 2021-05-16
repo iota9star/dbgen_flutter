@@ -31,3 +31,17 @@ class StringMapTypeConverter
 
   const StringMapTypeConverter();
 }
+
+class DurationConverter extends TypeConverter<Duration, int> {
+  const DurationConverter();
+
+  @override
+  Duration fromIsar(int object) {
+    return Duration(milliseconds: object);
+  }
+
+  @override
+  int toIsar(Duration object) {
+    return object.inMilliseconds;
+  }
+}

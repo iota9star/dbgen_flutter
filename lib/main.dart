@@ -7,6 +7,7 @@ import 'package:dbgen/model/theme.dart';
 import 'package:dbgen/providers.dart';
 import 'package:dbgen/topvars.dart';
 import 'package:dbgen/views/panel.dart';
+import 'package:dbgen/views/table_cart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -90,11 +91,18 @@ Widget myApp() {
 @swidget
 Widget homePage() {
   return Scaffold(
-    body: Row(
-      mainAxisSize: MainAxisSize.max,
+    body: Stack(
       children: [
-        const MenuPanel(),
-        const Expanded(child: const ContentPanel()),
+        Positioned.fill(
+          child: Row(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              const MenuPanel(),
+              const Expanded(child: const ContentPanel()),
+            ],
+          ),
+        ),
+        const TableCart(),
       ],
     ),
   );

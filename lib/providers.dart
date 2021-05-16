@@ -68,7 +68,7 @@ final dbRepoProvider =
     await isar.connections.put(connection);
   });
   ref.onDispose(repo.close);
-  await repo.connect(connection.toSettings());
+  await repo.connect(connection);
   return repo;
 });
 
@@ -77,7 +77,6 @@ final groupedTablesProvider =
   final repo = await ref.watch(dbRepoProvider.future);
   ref.read(tableSearchProvider.notifier).state = "";
   ref.read(dbFilterProvider.notifier).clear();
-  ref.read(selectedTableProvider.notifier).clear();
   return await repo.groupedTables();
 });
 
@@ -376,3 +375,27 @@ class ConnectionNotifier extends StateNotifier<Connection> {
 final editConnectionNotifierProvider =
     StateNotifierProvider<ConnectionNotifier, Connection>(
         (ref) => ConnectionNotifier(ref.read));
+
+final tableCartExpandedProvider = StateProvider((ref) => false);
+final tableCartItemProvider = ScopedProvider<Table>(null);
+
+final tableCartProvider =
+    Provider<Map<String, Map<String, List<Table>>>>((ref) {
+  final mapped = ref.watch(selectedTableProvider);
+  final tables = mapped.values;
+  final grouped = <String, Map<String, List<Table>>>{};
+  for (final value in tables) {
+    ((grouped[value.connection.title] ??= {})[value.db] ??= []).add(value);
+  }
+  return grouped;
+});
+
+final tableCartFloatProvider =
+    Provider<Tuple2<Iterable<Connection>, int>>((ref) {
+  final selected = ref.watch(selectedTableProvider);
+  final keys = <int?, Connection>{}; // isar not support getter
+  selected.values.forEach((element) {
+    keys[element.connection.id] = element.connection;
+  });
+  return Tuple2(keys.values, selected.length);
+});

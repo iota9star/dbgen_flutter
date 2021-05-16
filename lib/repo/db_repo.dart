@@ -6,18 +6,20 @@ import 'package:mysql1/mysql1.dart';
 
 class MySqlOrMariaDBRepo {
   MySqlConnection? _conn;
+  late Connection _connection;
 
   bool _isConnected = false;
 
   bool get isConnected => _isConnected;
 
-  connect(ConnectionSettings settings) async {
+  connect(Connection connection) async {
     this._conn?.close(); // close exist connect.
     try {
-      "test connecting server...".d();
-      this._conn = await MySqlConnection.connect(settings);
+      "test connecting server...${connection}".d();
+      this._conn = await MySqlConnection.connect(connection.toSettings());
       "server connected...".d();
       this._isConnected = true;
+      this._connection = connection;
     } catch (e) {
       e.d();
       this._isConnected = false;
@@ -60,7 +62,8 @@ class MySqlOrMariaDBRepo {
       (e) {
         final db = e.fields["db"];
         final name = e.fields["name"];
-        final id = "$db@$name";
+        final id =
+            this._connection.toString().replaceAll("{{db/tb}}", "$db/$name");
         var color = tableColors[id];
         if (color == null) {
           color = LightColor.random();
@@ -93,6 +96,7 @@ class MySqlOrMariaDBRepo {
           collation,
           e.fields["comment"].toString(),
           color,
+          this._connection,
         );
       },
     );

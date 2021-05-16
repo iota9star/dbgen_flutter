@@ -7,17 +7,18 @@ import 'package:mysql1/mysql1.dart';
 class Connection {
   @Id()
   int? id;
-  late String title;
+  late String title = "未命名数据源";
   String? desc;
-  late String host;
-  late int port;
+  late String host = "localhost";
+  late int port = 3306;
   String? user;
   String? password;
-  bool useCompression = false;
-  bool useSSL = false;
-  int? maxPacketSize;
-  int? charset;
-  int? timeout;
+  late bool useCompression = false;
+  late bool useSSL = false;
+  late int maxPacketSize = 16 * 1024 * 1024;
+  late int charset = CharacterSet.UTF8MB4;
+  @DurationConverter()
+  late Duration timeout = Duration(seconds: 30);
   late DateTime createAt;
   DateTime? updateAt;
   DateTime? lastOpenAt;
@@ -34,9 +35,9 @@ class Connection {
       password: this.password,
       useCompression: this.useCompression,
       useSSL: this.useSSL,
-      maxPacketSize: this.maxPacketSize ?? 16 * 1024 * 1024,
-      characterSet: this.charset ?? CharacterSet.UTF8MB4,
-      timeout: Duration(seconds: this.timeout ?? 30),
+      maxPacketSize: this.maxPacketSize,
+      characterSet: this.charset,
+      timeout: this.timeout,
     );
   }
 
@@ -71,9 +72,9 @@ class Connection {
       ..password = null
       ..useCompression = false
       ..useSSL = false
-      ..maxPacketSize = null
-      ..charset = null
-      ..timeout = null
+      ..maxPacketSize = 16 * 1024 * 1024
+      ..charset = CharacterSet.UTF8MB4
+      ..timeout = Duration(seconds: 30)
       ..updateAt = null
       ..lastOpenAt = null;
   }
@@ -95,6 +96,11 @@ class Connection {
       ..updateAt = null
       ..lastOpenAt = null;
   }
+
+  @override
+  String toString() {
+    return '@$user://$host:$port/{{db/tb}}?useCompression=$useCompression&useSSL=$useSSL&maxPacketSize=$maxPacketSize&charset=$charset&timeout=$timeout';
+  }
 }
 
 class Table {
@@ -108,6 +114,7 @@ class Table {
   final String? collation;
   final String? comment;
   final Color color;
+  final Connection connection;
 
   const Table(
     this.id,
@@ -120,6 +127,7 @@ class Table {
     this.collation,
     this.comment,
     this.color,
+    this.connection,
   );
 
   @override

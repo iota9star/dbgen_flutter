@@ -1,8 +1,6 @@
 import 'package:dbgen/isars.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/rendering.dart';
 import 'package:isar/isar.dart';
-
-import '../isars.dart';
 
 @Collection()
 class Template {

@@ -17,7 +17,7 @@ dependencies:
   isar: ^0.4.0
   isar_flutter_libs: ^0.4.0
   mustache_template: ^2.0.0
-  fluentui_system_icons: ^1.1.122
+  fluentui_system_icons: ^1.1.123
   flutter_highlight: ^0.7.0
   animations: ^2.0.0
   intl: ^0.17.0
@@ -28,9 +28,9 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  msix: ^2.1.0
+  msix: ^2.1.1
   functional_widget: ^0.9.0+1
-  build_runner: ^2.0.2
+  build_runner: ^2.0.3
   isar_generator: ^0.4.0
   pedantic: ^1.11.0
 

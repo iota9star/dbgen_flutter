@@ -286,7 +286,6 @@ Widget datasourceDetailPage() {
 @hwidget
 Widget tableSections(BuildContext context) {
   final groupTables = useProvider(filteredGroupedTablesProvider);
-  "build table fragment".d();
   return CustomScrollView(
     physics: const BouncingScrollPhysics(),
     slivers: groupTables.when(
@@ -384,7 +383,6 @@ Widget dbSection(BuildContext context) {
 Widget dbSectionCheckbox(BuildContext context) {
   final key = useProvider(dbSectionKeyProvider);
   final value = useProvider(dbCheckStateProvider.select((map) => map[key]));
-  "key: $key, value: $value".d();
   return CheckboxListTile(
     value: value,
     tristate: true,
@@ -418,7 +416,6 @@ Widget tableItemProviderScope() {
   final table = useProvider(tableItemProvider);
   final selected = useProvider(
       selectedTableProvider.select((value) => value.containsKey(table.id)));
-  "build table item provider scope".d();
   return ProviderScope(
     overrides: [tableItemIsSelectedProvider.overrideWithValue(selected)],
     child: const TableItem(),
@@ -622,7 +619,7 @@ Widget datasourceEditForm(BuildContext context) {
             context
                 .read(editConnectionNotifierProvider.notifier)
                 .updateField((conn) {
-              conn.charset = value;
+              conn.charset = value ?? CharacterSet.UTF8MB4;
             });
           },
         ),
@@ -860,7 +857,6 @@ Widget tableItem(BuildContext context) {
   final themeData = Theme.of(context);
   final table = useProvider(tableItemProvider);
   final isSelected = useProvider(tableItemIsSelectedProvider);
-  "build_table: ${table.id}".d();
   return Ripple(
     AnimatedContainer(
       padding: const EdgeInsets.only(

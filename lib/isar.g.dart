@@ -157,6 +157,7 @@ Future<String> _preparePath(String? path) async {
 }
 
 class _ConnectionAdapter extends TypeAdapter<Connection> {
+  static const _DurationConverter = DurationConverter();
   static const _ColorTypeConverter = ColorTypeConverter();
 
   @override
@@ -200,7 +201,8 @@ class _ConnectionAdapter extends TypeAdapter<Connection> {
     final _maxPacketSize = value9;
     final value10 = object.charset;
     final _charset = value10;
-    final value11 = object.timeout;
+    final value11 =
+        _ConnectionAdapter._DurationConverter.toIsar(object.timeout);
     final _timeout = value11;
     final value12 = object.createAt;
     final _createAt = value12;
@@ -260,9 +262,10 @@ class _ConnectionAdapter extends TypeAdapter<Connection> {
     object.password = reader.readStringOrNull(offsets[6]);
     object.useCompression = reader.readBool(offsets[7]);
     object.useSSL = reader.readBool(offsets[8]);
-    object.maxPacketSize = reader.readLongOrNull(offsets[9]);
-    object.charset = reader.readLongOrNull(offsets[10]);
-    object.timeout = reader.readLongOrNull(offsets[11]);
+    object.maxPacketSize = reader.readLong(offsets[9]);
+    object.charset = reader.readLong(offsets[10]);
+    object.timeout = _ConnectionAdapter._DurationConverter.fromIsar(
+        reader.readLong(offsets[11]));
     object.createAt = reader.readDateTime(offsets[12]);
     object.updateAt = reader.readDateTimeOrNull(offsets[13]);
     object.lastOpenAt = reader.readDateTimeOrNull(offsets[14]);
@@ -293,11 +296,12 @@ class _ConnectionAdapter extends TypeAdapter<Connection> {
       case 8:
         return (reader.readBool(offset)) as P;
       case 9:
-        return (reader.readLongOrNull(offset)) as P;
+        return (reader.readLong(offset)) as P;
       case 10:
-        return (reader.readLongOrNull(offset)) as P;
+        return (reader.readLong(offset)) as P;
       case 11:
-        return (reader.readLongOrNull(offset)) as P;
+        return (_ConnectionAdapter._DurationConverter.fromIsar(
+            reader.readLong(offset))) as P;
       case 12:
         return (reader.readDateTime(offset)) as P;
       case 13:
@@ -1094,16 +1098,8 @@ extension ConnectionQueryFilter on QueryBuilder<Connection, QFilterCondition> {
     ));
   }
 
-  QueryBuilder<Connection, QAfterFilterCondition> maxPacketSizeIsNull() {
-    return addFilterCondition(FilterCondition(
-      type: ConditionType.Eq,
-      property: 'maxPacketSize',
-      value: null,
-    ));
-  }
-
   QueryBuilder<Connection, QAfterFilterCondition> maxPacketSizeEqualTo(
-      int? value) {
+      int value) {
     return addFilterCondition(FilterCondition(
       type: ConditionType.Eq,
       property: 'maxPacketSize',
@@ -1112,7 +1108,7 @@ extension ConnectionQueryFilter on QueryBuilder<Connection, QFilterCondition> {
   }
 
   QueryBuilder<Connection, QAfterFilterCondition> maxPacketSizeGreaterThan(
-      int? value) {
+      int value) {
     return addFilterCondition(FilterCondition(
       type: ConditionType.Gt,
       property: 'maxPacketSize',
@@ -1121,7 +1117,7 @@ extension ConnectionQueryFilter on QueryBuilder<Connection, QFilterCondition> {
   }
 
   QueryBuilder<Connection, QAfterFilterCondition> maxPacketSizeLessThan(
-      int? value) {
+      int value) {
     return addFilterCondition(FilterCondition(
       type: ConditionType.Lt,
       property: 'maxPacketSize',
@@ -1130,7 +1126,7 @@ extension ConnectionQueryFilter on QueryBuilder<Connection, QFilterCondition> {
   }
 
   QueryBuilder<Connection, QAfterFilterCondition> maxPacketSizeBetween(
-      int? lower, int? upper) {
+      int lower, int upper) {
     return addFilterCondition(FilterCondition.between(
       property: 'maxPacketSize',
       lower: lower,
@@ -1138,15 +1134,7 @@ extension ConnectionQueryFilter on QueryBuilder<Connection, QFilterCondition> {
     ));
   }
 
-  QueryBuilder<Connection, QAfterFilterCondition> charsetIsNull() {
-    return addFilterCondition(FilterCondition(
-      type: ConditionType.Eq,
-      property: 'charset',
-      value: null,
-    ));
-  }
-
-  QueryBuilder<Connection, QAfterFilterCondition> charsetEqualTo(int? value) {
+  QueryBuilder<Connection, QAfterFilterCondition> charsetEqualTo(int value) {
     return addFilterCondition(FilterCondition(
       type: ConditionType.Eq,
       property: 'charset',
@@ -1155,7 +1143,7 @@ extension ConnectionQueryFilter on QueryBuilder<Connection, QFilterCondition> {
   }
 
   QueryBuilder<Connection, QAfterFilterCondition> charsetGreaterThan(
-      int? value) {
+      int value) {
     return addFilterCondition(FilterCondition(
       type: ConditionType.Gt,
       property: 'charset',
@@ -1163,7 +1151,7 @@ extension ConnectionQueryFilter on QueryBuilder<Connection, QFilterCondition> {
     ));
   }
 
-  QueryBuilder<Connection, QAfterFilterCondition> charsetLessThan(int? value) {
+  QueryBuilder<Connection, QAfterFilterCondition> charsetLessThan(int value) {
     return addFilterCondition(FilterCondition(
       type: ConditionType.Lt,
       property: 'charset',
@@ -1172,7 +1160,7 @@ extension ConnectionQueryFilter on QueryBuilder<Connection, QFilterCondition> {
   }
 
   QueryBuilder<Connection, QAfterFilterCondition> charsetBetween(
-      int? lower, int? upper) {
+      int lower, int upper) {
     return addFilterCondition(FilterCondition.between(
       property: 'charset',
       lower: lower,
@@ -1180,45 +1168,39 @@ extension ConnectionQueryFilter on QueryBuilder<Connection, QFilterCondition> {
     ));
   }
 
-  QueryBuilder<Connection, QAfterFilterCondition> timeoutIsNull() {
+  QueryBuilder<Connection, QAfterFilterCondition> timeoutEqualTo(
+      Duration value) {
     return addFilterCondition(FilterCondition(
       type: ConditionType.Eq,
       property: 'timeout',
-      value: null,
-    ));
-  }
-
-  QueryBuilder<Connection, QAfterFilterCondition> timeoutEqualTo(int? value) {
-    return addFilterCondition(FilterCondition(
-      type: ConditionType.Eq,
-      property: 'timeout',
-      value: value,
+      value: _ConnectionAdapter._DurationConverter.toIsar(value),
     ));
   }
 
   QueryBuilder<Connection, QAfterFilterCondition> timeoutGreaterThan(
-      int? value) {
+      Duration value) {
     return addFilterCondition(FilterCondition(
       type: ConditionType.Gt,
       property: 'timeout',
-      value: value,
+      value: _ConnectionAdapter._DurationConverter.toIsar(value),
     ));
   }
 
-  QueryBuilder<Connection, QAfterFilterCondition> timeoutLessThan(int? value) {
+  QueryBuilder<Connection, QAfterFilterCondition> timeoutLessThan(
+      Duration value) {
     return addFilterCondition(FilterCondition(
       type: ConditionType.Lt,
       property: 'timeout',
-      value: value,
+      value: _ConnectionAdapter._DurationConverter.toIsar(value),
     ));
   }
 
   QueryBuilder<Connection, QAfterFilterCondition> timeoutBetween(
-      int? lower, int? upper) {
+      Duration lower, Duration upper) {
     return addFilterCondition(FilterCondition.between(
       property: 'timeout',
-      lower: lower,
-      upper: upper,
+      lower: _ConnectionAdapter._DurationConverter.toIsar(lower),
+      upper: _ConnectionAdapter._DurationConverter.toIsar(upper),
     ));
   }
 
@@ -3387,15 +3369,15 @@ extension ConnectionQueryProperty on QueryBuilder<Connection, QQueryProperty> {
     return addPropertyName('useSSL');
   }
 
-  QueryBuilder<int?, QQueryOperations> maxPacketSizeProperty() {
+  QueryBuilder<int, QQueryOperations> maxPacketSizeProperty() {
     return addPropertyName('maxPacketSize');
   }
 
-  QueryBuilder<int?, QQueryOperations> charsetProperty() {
+  QueryBuilder<int, QQueryOperations> charsetProperty() {
     return addPropertyName('charset');
   }
 
-  QueryBuilder<int?, QQueryOperations> timeoutProperty() {
+  QueryBuilder<Duration, QQueryOperations> timeoutProperty() {
     return addPropertyName('timeout');
   }
 
