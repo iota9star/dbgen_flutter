@@ -82,6 +82,7 @@ final controlButtonActions = [
 
 final contentPanelNavKey = GlobalKey<NavigatorState>();
 
+const sizedBoxH4 = const SizedBox(height: 4.0);
 const sizedBoxH8 = const SizedBox(height: 8.0);
 const sizedBoxH12 = const SizedBox(height: 12.0);
 const sizedBoxH16 = const SizedBox(height: 16.0);

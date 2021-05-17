@@ -1,4 +1,5 @@
 import 'package:dbgen/ext/ext.dart';
+import 'package:dbgen/misc/transition.dart';
 import 'package:dbgen/providers.dart';
 import 'package:dbgen/topvars.dart';
 import 'package:extended_sliver/extended_sliver.dart';
@@ -17,9 +18,6 @@ const kDefaultCartBottomOffset = 64.0;
 @hwidget
 Widget tableCart(BuildContext context) {
   final expanded = useProvider(tableCartExpandedProvider).state;
-  final size = MediaQuery.of(context).size;
-  expanded.d();
-  size.d();
   return expanded
       ? AnimatedPositioned(
           child: const ExpandedTableCart(),
@@ -39,9 +37,8 @@ Widget tableCart(BuildContext context) {
 
 @hwidget
 Widget floatCart(BuildContext context) {
-  final pair = useProvider(tableCartFloatProvider);
-  final keys = pair.item1;
-  final count = pair.item2;
+  final selected = useProvider(selectedTableProvider);
+  final count = selected.length;
   final themeData = Theme.of(context);
   return count == 0
       ? SizedBox()
@@ -50,7 +47,7 @@ Widget floatCart(BuildContext context) {
             context.read(tableCartExpandedProvider).state = true;
           },
           child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
+            padding: EdgeInsets.symmetric(horizontal: 6.0, vertical: 6.0),
             decoration: BoxDecoration(
               color: themeData.backgroundColor,
               boxShadow: [
@@ -60,39 +57,13 @@ Widget floatCart(BuildContext context) {
                 )
               ],
             ),
-            width: 48.0,
+            width: 40.0,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                for (var value in keys)
-                  Container(
-                    width: 32.0,
-                    height: 32.0,
-                    decoration: BoxDecoration(
-                      color: value.color,
-                    ),
-                    child: Center(
-                        child: Text(
-                      value.title.characters.first,
-                      style: TextStyle(
-                        fontSize: 14.0,
-                        fontWeight: FontWeight.w500,
-                        height: 1.25,
-                        color: value.color.computeLuminance() > 0.5
-                            ? Colors.black
-                            : Colors.white,
-                      ),
-                    )),
-                  ),
-                sizedBoxH8,
-                Text(
-                  "+${count}",
-                  style: TextStyle(
-                    fontSize: 12.0,
-                    fontFamily: monoFont,
-                    color: themeData.primaryColor,
-                  ),
-                )
+                const FloatCartSelectedSource(),
+                sizedBoxH4,
+                const FloatCartCount(),
               ],
             ),
           ),
@@ -100,16 +71,95 @@ Widget floatCart(BuildContext context) {
 }
 
 @hwidget
+Widget floatCartSelectedSource() {
+  final keys = useProvider(tableCartFloatKeysProvider);
+  return ListView.builder(
+    itemBuilder: (_, index) {
+      final value = keys.elementAt(index);
+      return Container(
+        width: 28.0,
+        height: 28.0,
+        decoration: BoxDecoration(
+          color: value.color,
+        ),
+        child: Center(
+            child: Text(
+          value.title.characters.first,
+          style: TextStyle(
+            fontSize: 14.0,
+            fontWeight: FontWeight.w500,
+            height: 1.25,
+            color: value.color.computeLuminance() > 0.5
+                ? Colors.black
+                : Colors.white,
+          ),
+        )),
+      );
+    },
+    itemCount: keys.length,
+    shrinkWrap: true,
+  );
+}
+
+@hwidget
+Widget floatCartCount(BuildContext context) {
+  final selected = useProvider(selectedTableProvider);
+  final count = selected.length;
+  final countKey = ValueKey(count);
+  final themeData = Theme.of(context);
+  return Row(
+    children: [
+      Text(
+        "+",
+        style: TextStyle(
+          fontFamily: monoFont,
+          fontSize: 10.0,
+          color: themeData.primaryColor,
+        ),
+      ),
+      AnimatedSwitcher(
+        duration: Duration(milliseconds: 300),
+        transitionBuilder: (child, animation) {
+          return counterTransitionBuilder(countKey, true, child, animation);
+        },
+        child: Text(
+          count.toString(),
+          key: countKey,
+          style: TextStyle(
+            fontSize: 12.0,
+            fontFamily: monoFont,
+            color: themeData.primaryColor,
+          ),
+        ),
+      )
+    ],
+  );
+}
+
+@hwidget
 Widget expandedCountTitle() {
-  final pair = useProvider(tableCartFloatProvider);
-  final count = pair.item2;
-  return Text(
-    "已选：+${count}",
-    style: TextStyle(
-      fontSize: 16.0,
-      height: 1.25,
-      fontWeight: FontWeight.w500,
-    ),
+  final selected = useProvider(selectedTableProvider);
+  final count = selected.length;
+  final countKey = ValueKey(count);
+  return Row(
+    children: [
+      Text("已选：+"),
+      AnimatedSwitcher(
+        duration: Duration(milliseconds: 300),
+        transitionBuilder: (child, animation) {
+          return counterTransitionBuilder(countKey, true, child, animation);
+        },
+        child: Text(
+          count.toString(),
+          key: countKey,
+          style: TextStyle(
+            fontSize: 24,
+            color: Colors.white,
+            fontFamily: "mono",
+          ),
+        ),
+      )
+    ],
   );
 }
 

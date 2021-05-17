@@ -390,12 +390,11 @@ final tableCartProvider =
   return grouped;
 });
 
-final tableCartFloatProvider =
-    Provider<Tuple2<Iterable<Connection>, int>>((ref) {
+final tableCartFloatKeysProvider = Provider<Iterable<Connection>>((ref) {
   final selected = ref.watch(selectedTableProvider);
   final keys = <int?, Connection>{}; // isar not support getter
   selected.values.forEach((element) {
     keys[element.connection.id] = element.connection;
   });
-  return Tuple2(keys.values, selected.length);
+  return keys.values;
 });

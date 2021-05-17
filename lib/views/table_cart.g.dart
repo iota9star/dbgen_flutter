@@ -20,6 +20,20 @@ class FloatCart extends HookWidget {
   Widget build(BuildContext _context) => floatCart(_context);
 }
 
+class FloatCartSelectedSource extends HookWidget {
+  const FloatCartSelectedSource({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext _context) => floatCartSelectedSource();
+}
+
+class FloatCartCount extends HookWidget {
+  const FloatCartCount({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext _context) => floatCartCount(_context);
+}
+
 class ExpandedCountTitle extends HookWidget {
   const ExpandedCountTitle({Key? key}) : super(key: key);
 
