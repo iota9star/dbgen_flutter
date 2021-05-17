@@ -43,6 +43,17 @@ extension StringExt on String {
       rune == 0x205F ||
       rune == 0x3000 ||
       rune == 0xFEFF;
+
+  String fillChar(String value, String char) {
+    var offset = value.length - this.length;
+    var newVal = this;
+    if (offset > 0) {
+      for (int i = 0; i < offset; i++) {
+        newVal = char + newVal;
+      }
+    }
+    return newVal;
+  }
 }
 
 final DateFormat _logDateFormatter = DateFormat("HH:mm:ss.SSS");

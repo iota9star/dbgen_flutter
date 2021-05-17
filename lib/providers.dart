@@ -243,21 +243,22 @@ class SelectedTableNotifier extends StateNotifier<Map<String, Table>> {
 
   operator []=(String key, Table value) {
     this.state[key] = value;
-    notifyListeners();
+    refresh();
   }
 
   void remove(String key) {
     this.state.remove(key);
-    notifyListeners();
+    refresh();
   }
 
-  void clear() {
-    this.state.clear();
+  void refresh() {
+    this.state = this.state;
+    read(tableCartFloatCountNotifierProvider.notifier).set(state.length);
   }
 
   void uncheck(String db) {
     this.state.removeWhere((key, value) => value.db == db);
-    notifyListeners();
+    refresh();
   }
 
   void check(String db) async {
@@ -265,7 +266,7 @@ class SelectedTableNotifier extends StateNotifier<Map<String, Table>> {
     groupedTables[db]?.forEach((tb) {
       this.state[tb.id] = tb;
     });
-    notifyListeners();
+    refresh();
   }
 }
 
@@ -398,3 +399,19 @@ final tableCartFloatKeysProvider = Provider<Iterable<Connection>>((ref) {
   });
   return keys.values;
 });
+
+final tableCartFloatCountNotifierProvider =
+    StateNotifierProvider<TableCartFloatCountNotifier, Tuple2<int, int>>(
+        (ref) => TableCartFloatCountNotifier());
+
+class TableCartFloatCountNotifier extends StateNotifier<Tuple2<int, int>> {
+  TableCartFloatCountNotifier() : super(Tuple2(0, 0));
+  int _preValue = 0;
+
+  int get preValue => _preValue;
+
+  void set(int value) {
+    this._preValue = this.state.item2;
+    this.state = Tuple2(this._preValue, value);
+  }
+}

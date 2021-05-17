@@ -103,36 +103,45 @@ Widget floatCartSelectedSource() {
 
 @hwidget
 Widget floatCartCount(BuildContext context) {
-  final selected = useProvider(selectedTableProvider);
-  final count = selected.length;
-  final countKey = ValueKey(count);
+  final pair = useProvider(tableCartFloatCountNotifierProvider);
   final themeData = Theme.of(context);
-  return Row(
-    children: [
-      Text(
-        "+",
+  var prev = pair.item1.toString();
+  var next = pair.item2.toString();
+  if (prev.length > next.length) {
+    next = next.fillChar(prev, " ");
+  } else if (prev.length < next.length) {
+    prev = prev.fillChar(next, " ");
+  }
+  final children = List.generate(prev.length, (ind) {
+    final newChar = next[ind];
+    final oldChar = prev[ind];
+    final key = ValueKey(newChar);
+    final up = (int.tryParse(newChar) ?? 0) - (int.tryParse(oldChar) ?? 0) >= 0;
+    return AnimatedSwitcher(
+      duration: Duration(milliseconds: 256 + ind * 64),
+      transitionBuilder: (child, animation) {
+        return counterTransitionBuilder(
+          key,
+          up,
+          child,
+          animation,
+        );
+      },
+      child: Text(
+        newChar,
+        key: key,
         style: TextStyle(
           fontFamily: monoFont,
-          fontSize: 10.0,
+          fontSize: 11.0,
           color: themeData.primaryColor,
+          fontWeight: FontWeight.bold,
         ),
       ),
-      AnimatedSwitcher(
-        duration: Duration(milliseconds: 300),
-        transitionBuilder: (child, animation) {
-          return counterTransitionBuilder(countKey, true, child, animation);
-        },
-        child: Text(
-          count.toString(),
-          key: countKey,
-          style: TextStyle(
-            fontSize: 12.0,
-            fontFamily: monoFont,
-            color: themeData.primaryColor,
-          ),
-        ),
-      )
-    ],
+    );
+  });
+  return Row(
+    mainAxisAlignment: MainAxisAlignment.end,
+    children: [...children],
   );
 }
 
