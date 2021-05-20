@@ -287,7 +287,7 @@ Widget datasourceDetailPage() {
 Widget tableSections(BuildContext context) {
   final groupTables = useProvider(filteredGroupedTablesProvider);
   return CustomScrollView(
-    physics: const BouncingScrollPhysics(),
+    physics: const ClampingScrollPhysics(),
     slivers: groupTables.when(
       data: (data) {
         return data.entries.map(
@@ -469,7 +469,7 @@ Widget datasourceEditPage(BuildContext context) {
         const Expanded(
           child: const Scrollbar(
             child: const SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
+              physics: const ClampingScrollPhysics(),
               child: const Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 24.0),
                 child: const DatasourceEditForm(),
